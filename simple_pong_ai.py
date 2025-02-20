@@ -55,10 +55,10 @@ def simple_pong_ai(observation):
         ball_y = ball_pos[1]
         paddle_y = paddle_pos[1]
         
-        if paddle_y + 10 < ball_y:  # Paddle is above the ball, move down
-            action = 3  # Move down
-        elif paddle_y > ball_y + 10:  # Paddle is below the ball, move up
-            action = 2  # Move up
+        if paddle_y + 10 < ball_y:  # Paddle is below the ball, move up
+            action = 3  
+        elif paddle_y > ball_y + 10:  # Paddle is above the ball, move down
+            action = 2
         
         # Print state information
         print(f"\rBall position: {ball_pos}, Paddle position: {paddle_pos}, Action: {action}", end="")
