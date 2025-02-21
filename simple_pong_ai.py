@@ -3,10 +3,6 @@ import ale_py
 import numpy as np
 import cv2
 
-gym.register_envs(ale_py)
-
-# Create the Pong environment
-env = gym.make("ALE/Pong-v5", render_mode="human", obs_type="grayscale")
 
 def process_frame(gray):
     """ Extracts the ball and paddle positions from the grayscale frame. """
@@ -31,7 +27,6 @@ def process_frame(gray):
     
     ball_pos = None
     paddle_pos = None
-    print(f"Contours: {contours}")
     for contour in contours:
         x, y, w, h = cv2.boundingRect(contour)
         area = cv2.contourArea(contour)
@@ -67,22 +62,30 @@ def simple_pong_ai(observation):
     
     return action
 
-# Run the game loop
-obs, _ = env.reset()
-print(f"Initial obs shape: {obs.shape}")
-episode_steps = 0
-total_reward = 0
+if __name__ == "__main__":
 
-done = False
-while not done:
-    action = simple_pong_ai(obs)  # Get action from heuristic AI
-    obs, reward, terminated, truncated, _ = env.step(action)
-    total_reward += reward
-    episode_steps += 1
-    
-    if terminated or truncated:
-        print(f"\nEpisode finished after {episode_steps} steps. Total reward: {total_reward}")
-    
-    done = terminated or truncated
+    gym.register_envs(ale_py)
 
-env.close()
+    # Create the Pong environment
+    env = gym.make("ALE/Pong-v5", render_mode="human", obs_type="grayscale")
+
+    # Run the game loop
+    obs, _ = env.reset()
+    print(f"Initial obs shape: {obs.shape}")
+    episode_steps = 0
+    total_reward = 0
+
+    done = False
+    while not done:
+        action = simple_pong_ai(obs)  # Get action from heuristic AI
+        obs, reward, terminated, truncated, info = env.step(action)
+        print(f"info: {info}, reward: {reward}")
+        total_reward += reward
+        episode_steps += 1
+        
+        if terminated or truncated:
+            print(f"\nEpisode finished after {episode_steps} steps. Total reward: {total_reward}")
+        
+        done = terminated or truncated
+
+    env.close()
