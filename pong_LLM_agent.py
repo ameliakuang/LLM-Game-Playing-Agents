@@ -22,12 +22,6 @@ from opto.trace.errors import ExecutionError
 load_dotenv()
 gym.register_envs(ale_py)
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
-console_handler = logging.StreamHandler()
-console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-logger.addHandler(console_handler)
-
 def process_image(obs):
     """Process the grayscale image into contours.
     
@@ -175,12 +169,14 @@ def optimize_policy(
     @trace.bundle(trainable=True)
     def policy(obs):
         '''
-        A policy that takes in an observation and returns an action.
+        A policy that moves the paddle towards the ball to deflect the ball.
+        If the paddle is below the ball, move up; otherwise, move down.
+        Make prediction on the ball's moving direction and velocity to adjust the paddle action.
 
         Args:
             obs (dict): A dictionary with keys "ball_pos" and "paddle_pos" and values the corresponding [x, y, w, h], coordinates, width and height of the ball and agent paddle in the game screen of (210, 160).
         Output:
-            action (int): The action to take among 0 (NOOP), 1 (FIRE), 2 (RIGHT), 3 (LEFT), 4 (RIGHTFIRE), 5(LEFTFIRE).
+            action (int): The action to take among 0 (NOOP), 1 (FIRE), 2 (DOWN), 3 (UP).
         '''
         ball_pos = obs["ball_pos"]
         paddle_pos = obs["paddle_pos"]
@@ -252,7 +248,14 @@ def optimize_policy(
     return rewards
 
 if __name__ == "__main__":
-    # Set up file logging when running as main script
+    # Set up logging
+    logger = logging.getLogger(__name__)
+    logger.setLevel(logging.INFO)
+    console_handler = logging.StreamHandler()
+    console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+    logger.addHandler(console_handler)
+
+    # Set up file logging
     log_dir = Path("logs")
     log_dir.mkdir(exist_ok=True)
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
