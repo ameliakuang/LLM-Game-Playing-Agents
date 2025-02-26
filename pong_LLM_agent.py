@@ -9,6 +9,11 @@ import numpy as np
 import io
 import contextlib
 
+os.environ['TRACE_CUSTOMLLM_MODEL'] = "anthropic.claude-3-5-sonnet-20240620-v1:0"
+os.environ['TRACE_CUSTOMLLM_URL'] = "http://3.213.219.83:4000/"
+os.environ['TRACE_CUSTOMLLM_API_KEY'] = "sk-Xhglzhzo3JZ5oHCHacozzijW6Vs3mLpZ3YaoZMM6HbjT2wgCUlZizvvamJdmhtvs"
+os.environ['TRACE_DEFAULT_LLM_BACKEND'] = 'CustomLLM'
+
 from dotenv import load_dotenv
 from autogen import config_list_from_json
 import gymnasium as gym
@@ -198,7 +203,7 @@ def optimize_policy(
     config_list = [config for config in config_list if config["model"] == model]
     optimizer = OptoPrime(policy.parameters(), config_list=config_list, memory_size=memory_size)
     
-    env = PongTracedEnv(env_name=env_name)
+    env = PongTracedEnv(env_name=env_name, render_mode=None)
     try:
         rewards = []
         logger.info("Optimization Starts")
@@ -272,6 +277,6 @@ if __name__ == "__main__":
         n_optimization_steps=5,
         memory_size=5,
         verbose='output',
-        model="gpt-4o-mini"
+        model="gpt-4o"
     )
     logger.info("Training completed.")

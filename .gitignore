@@ -5,6 +5,7 @@ __pycache__/
 
 # API key files
 OAI_CONFIG.json
+OAI_CONFIG_LIST
 
 # C extensions
 *.so
@@ -175,3 +176,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+
+# Other
+.DS_Store
+wandb/
