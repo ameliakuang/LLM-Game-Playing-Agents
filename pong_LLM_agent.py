@@ -8,6 +8,7 @@ from pathlib import Path
 import numpy as np
 import io
 import contextlib
+from copy import copy
 
 from dotenv import load_dotenv
 from autogen import config_list_from_json
@@ -72,6 +73,7 @@ class PongTracedEnv:
         self.render_mode = render_mode
         self.obs_type = obs_type
         self.env = None
+        self.prev_obs = None
         self.init()
     
     def init(self):
@@ -80,6 +82,7 @@ class PongTracedEnv:
         self.env = gym.make(self.env_name, render_mode=self.render_mode, obs_type=self.obs_type)
         self.env.reset()
         self.obs = None
+        self.prev_obs = None
     
     def close(self):
         if self.env is not None:
@@ -89,6 +92,11 @@ class PongTracedEnv:
     def __del__(self):
         self.close()
     
+    def _add_prefix_to_keys(self, input_dict, prefix):
+        """Adds a prefix to the keys of a dictionary.
+        """
+        return {f"{prefix}{key}": value for key, value in input_dict.items()}
+
     @bundle()
     def reset(self):
         """
@@ -97,14 +105,32 @@ class PongTracedEnv:
         obs, info = self.env.reset()
         self.obs = process_image(obs)
         self.obs['reward'] = np.nan
+        self.prev_obs = {
+            'ball_pos': None,
+            'paddle_pos': None,
+            'opponent_pos': None,
+            'reward': np.nan
+        }
+        self.obs.update(self._add_prefix_to_keys(self.prev_obs, "prev_"))
+
         return self.obs, info
     
     def step(self, action):
         try:
             control = action.data if isinstance(action, trace.Node) else action
             next_obs, reward, termination, truncation, info = self.env.step(control)
+            current_obs = {
+                'ball_pos': self.obs.get('ball_pos', None),
+                'paddle_pos': self.obs.get('paddle_pos', None),
+                'opponent_pos': self.obs.get('opponent_pos', None),
+                'reward': self.obs.get('reward', np.nan)
+            }
+            self.prev_obs = current_obs
             self.obs = next_obs = process_image(next_obs)
             self.obs['reward'] = next_obs['reward'] = reward
+            if self.prev_obs:
+                self.obs.update(self._add_prefix_to_keys(self.prev_obs, "prev_"))
+
         except Exception as e:
             e_node = ExceptionNode(
                 e,
@@ -169,34 +195,27 @@ def optimize_policy(
     @trace.bundle(trainable=True)
     def policy(obs):
         '''
-        A policy that moves the paddle towards the ball to deflect the ball.
-        If the paddle is below the ball, move up; otherwise, move down.
+        A policy that moves the paddle up or down to catch and deflect a moving ball.
+        IMPORTANT!! If the paddle is BELOW the ball, move the paddle UP; otherwise, move the paddle DOWN.
         Make prediction on the ball's moving direction and velocity to adjust the paddle action.
+        If the ball is off-screen, then ball_pos would be None and there's no need to adjust the paddle (NOOP).
 
         Args:
-            obs (dict): A dictionary with keys "ball_pos" and "paddle_pos" and values the corresponding [x, y, w, h], coordinates, width and height of the ball and agent paddle in the game screen of (210, 160).
+            obs (dict): A dictionary with keys ("ball_pos", "paddle_pos", "prev_ball_pos", "prev_paddle_pos") and values the corresponding [x, y, w, h], coordinates, width and height of the ball and agent paddle in the screen.
         Output:
             action (int): The action to take among 0 (NOOP), 1 (FIRE), 2 (DOWN), 3 (UP).
         '''
-        ball_pos = obs["ball_pos"]
-        paddle_pos = obs["paddle_pos"]
+        ball_pos = obs.get("ball_pos", None)
+        paddle_pos = obs.get("paddle_pos", None)
 
-        action = 0 # NOOP
-        if ball_pos and paddle_pos:
-            ball_y = ball_pos[1]
-            paddle_y = paddle_pos[1]
-            
-            if paddle_y + 10 < ball_y:  # Paddle is below the ball, move up
-                action = 3  
-            elif paddle_y > ball_y + 10:  # Paddle is above the ball, move down
-                action = 2
-        return action
+        return 0  # NOOP if no data is available
     
     # Get the config file path from environment variable
-    config_path = os.getenv("OAI_CONFIG_LIST")
-    config_list = config_list_from_json(config_path)
-    config_list = [config for config in config_list if config["model"] == model]
-    optimizer = OptoPrime(policy.parameters(), config_list=config_list, memory_size=memory_size)
+    # config_path = os.getenv("OAI_CONFIG_LIST")
+    # config_list = config_list_from_json(config_path)
+    # config_list = [config for config in config_list if config["model"] == model]
+    # optimizer = OptoPrime(policy.parameters(), config_list=config_list, memory_size=memory_size)
+    optimizer = OptoPrime(policy.parameters(), memory_size=memory_size)
     
     env = PongTracedEnv(env_name=env_name)
     try:
@@ -224,7 +243,7 @@ def optimize_policy(
             instruction = "In Pong, you control the right paddle and compete against the computer on the left. "
             instruction += "The goal is to keep deflecting the ball away from your goal and into your opponent's goal to maximize your score and win the game. "
             instruction += "You score one point when the opponent misses the ball or hits it out of bounds. "
-            instruction += "The policy should move the right paddle up or down or NOOP to hit the ball. "
+            instruction += "The policy should move the paddle up or down or NOOP to hit the ball. If the paddle is below the ball, move the paddle up; otherwise, move the paddle down."
             
             optimizer.objective = instruction + optimizer.default_objective
             
@@ -268,8 +287,8 @@ if __name__ == "__main__":
     logger.info("Starting Pong AI training...")
     rewards = optimize_policy(
         env_name="ALE/Pong-v5",
-        horizon=800,
-        n_optimization_steps=5,
+        horizon=400,
+        n_optimization_steps=20,
         memory_size=5,
         verbose='output',
         model="gpt-4o-mini"
