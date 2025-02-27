@@ -75,22 +75,31 @@ def test_policy(env, num_episodes=10, steps_per_episode=4000):
 
             action = 0  # NOOP
             if ball_pos and paddle_pos:
-                ball_y = ball_pos[1]
-                paddle_y = paddle_pos[1]
+            #     ball_y = ball_pos[1]
+            #     paddle_y = paddle_pos[1]
                 
-                # Predict ball movement (assuming constant velocity)
-                ball_velocity = ball_y - env.prev_ball_y if env.prev_ball_y is not None else 0
-                predicted_ball_y = ball_y + ball_velocity * 3  # Predict 3 steps ahead
+            #     # Predict ball movement (assuming constant velocity)
+            #     ball_velocity = ball_y - env.prev_ball_y if env.prev_ball_y is not None else 0
+            #     predicted_ball_y = ball_y + ball_velocity * 3  # Predict 3 steps ahead
                 
-                # Adjust paddle position more precisely
-                paddle_center = paddle_y + paddle_pos[3] / 2
-                if paddle_center < predicted_ball_y - 2:
-                    action = 3  # Move up
-                elif paddle_center > predicted_ball_y + 2:
-                    action = 2  # Move down
+            #     # Adjust paddle position more precisely
+            #     paddle_center = paddle_y + paddle_pos[3] / 2
+            #     if paddle_center < predicted_ball_y - 2:
+            #         action = 3  # Move up
+            #     elif paddle_center > predicted_ball_y + 2:
+            #         action = 2  # Move down
+
+                paddle_center = paddle_pos[1] + paddle_pos[3] / 2
+
+                if paddle_center < ball_pos[1]:
+                    action=3  # move paddle up
+                elif paddle_center > ball_pos[1]:
+                    action=2  # move paddle down
+                else:
+                    action=0  # NOOP
                 
                 # Store current ball position for next prediction
-                env.prev_ball_y = ball_y
+                # env.prev_ball_y = ball_y
             
             obs, reward, terminated, truncated, _ = env.step(action)
             episode_reward += reward
