@@ -1,0 +1,1911 @@
+2025-02-24 22:26:51,508 - INFO - Starting Breakout AI training...
+2025-02-24 22:26:51,796 - INFO - Optimization Starts
+2025-02-24 22:26:57,417 - INFO - Iteration: 0, Feedback: Episode ends after 122 steps with total score: 0.0
+Try to improve paddle positioning to hit the ball and break bricks., target: MessageNode: (BreakoutTracedEnv.step.<locals>.step_bundle:121, dtype=<class 'dict'>, data={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}), Parameter: [<opto.trace.nodes.ParameterNode object at 0x324c32600>]
+2025-02-24 22:26:57,454 - INFO - 
+#Instruction
+In Breakout, you control a paddle at the bottom of the screen to bounce a ball and break bricks. Fire the ball to launch it and then move the paddle left or right to intercept the ball. The goal is to score points by breaking bricks while keeping the ball in play. You need to change the <value> of the variables in #Variables to improve the output in accordance to #Feedback.
+
+#Code
+eval0 = eval(obs=getitem0, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle0 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval0)
+eval1 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle0, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle1 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval1)
+eval2 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle1, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle2 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval2)
+eval3 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle2, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle3 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval3)
+eval4 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle3, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle4 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval4)
+eval5 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle4, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle5 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval5)
+eval6 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle5, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle6 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval6)
+eval7 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle6, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle7 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval7)
+eval8 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle7, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle8 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval8)
+eval9 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle8, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle9 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval9)
+eval10 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle9, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle10 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval10)
+eval11 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle10, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle11 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval11)
+eval12 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle11, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle12 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval12)
+eval13 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle12, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle13 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval13)
+eval14 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle13, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle14 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval14)
+eval15 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle14, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle15 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval15)
+eval16 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle15, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle16 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval16)
+eval17 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle16, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle17 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval17)
+eval18 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle17, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle18 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval18)
+eval19 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle18, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle19 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval19)
+eval20 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle19, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle20 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval20)
+eval21 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle20, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle21 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval21)
+eval22 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle21, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle22 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval22)
+eval23 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle22, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle23 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval23)
+eval24 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle23, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle24 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval24)
+eval25 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle24, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle25 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval25)
+eval26 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle25, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle26 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval26)
+eval27 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle26, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle27 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval27)
+eval28 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle27, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle28 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval28)
+eval29 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle28, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle29 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval29)
+eval30 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle29, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle30 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval30)
+eval31 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle30, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle31 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval31)
+eval32 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle31, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle32 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval32)
+eval33 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle32, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle33 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval33)
+eval34 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle33, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle34 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval34)
+eval35 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle34, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle35 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval35)
+eval36 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle35, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle36 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval36)
+eval37 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle36, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle37 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval37)
+eval38 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle37, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle38 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval38)
+eval39 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle38, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle39 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval39)
+eval40 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle39, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle40 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval40)
+eval41 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle40, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle41 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval41)
+eval42 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle41, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle42 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval42)
+eval43 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle42, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle43 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval43)
+eval44 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle43, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle44 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval44)
+eval45 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle44, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle45 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval45)
+eval46 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle45, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle46 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval46)
+eval47 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle46, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle47 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval47)
+eval48 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle47, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle48 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval48)
+eval49 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle48, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle49 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval49)
+eval50 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle49, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle50 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval50)
+eval51 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle50, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle51 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval51)
+eval52 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle51, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle52 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval52)
+eval53 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle52, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle53 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval53)
+eval54 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle53, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle54 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval54)
+eval55 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle54, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle55 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval55)
+eval56 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle55, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle56 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval56)
+eval57 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle56, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle57 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval57)
+eval58 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle57, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle58 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval58)
+eval59 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle58, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle59 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval59)
+eval60 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle59, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle60 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval60)
+eval61 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle60, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle61 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval61)
+eval62 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle61, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle62 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval62)
+eval63 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle62, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle63 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval63)
+eval64 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle63, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle64 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval64)
+eval65 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle64, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle65 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval65)
+eval66 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle65, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle66 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval66)
+eval67 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle66, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle67 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval67)
+eval68 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle67, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle68 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval68)
+eval69 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle68, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle69 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval69)
+eval70 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle69, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle70 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval70)
+eval71 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle70, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle71 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval71)
+eval72 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle71, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle72 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval72)
+eval73 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle72, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle73 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval73)
+eval74 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle73, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle74 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval74)
+eval75 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle74, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle75 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval75)
+eval76 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle75, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle76 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval76)
+eval77 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle76, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle77 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval77)
+eval78 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle77, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle78 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval78)
+eval79 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle78, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle79 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval79)
+eval80 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle79, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle80 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval80)
+eval81 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle80, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle81 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval81)
+eval82 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle81, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle82 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval82)
+eval83 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle82, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle83 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval83)
+eval84 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle83, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle84 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval84)
+eval85 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle84, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle85 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval85)
+eval86 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle85, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle86 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval86)
+eval87 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle86, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle87 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval87)
+eval88 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle87, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle88 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval88)
+eval89 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle88, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle89 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval89)
+eval90 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle89, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle90 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval90)
+eval91 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle90, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle91 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval91)
+eval92 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle91, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle92 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval92)
+eval93 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle92, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle93 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval93)
+eval94 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle93, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle94 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval94)
+eval95 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle94, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle95 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval95)
+eval96 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle95, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle96 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval96)
+eval97 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle96, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle97 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval97)
+eval98 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle97, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle98 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval98)
+eval99 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle98, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle99 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval99)
+eval100 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle99, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle100 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval100)
+eval101 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle100, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle101 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval101)
+eval102 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle101, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle102 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval102)
+eval103 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle102, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle103 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval103)
+eval104 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle103, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle104 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval104)
+eval105 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle104, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle105 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval105)
+eval106 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle105, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle106 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval106)
+eval107 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle106, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle107 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval107)
+eval108 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle107, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle108 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval108)
+eval109 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle108, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle109 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval109)
+eval110 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle109, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle110 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval110)
+eval111 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle110, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle111 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval111)
+eval112 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle111, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle112 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval112)
+eval113 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle112, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle113 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval113)
+eval114 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle113, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle114 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval114)
+eval115 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle114, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle115 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval115)
+eval116 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle115, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle116 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval116)
+eval117 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle116, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle117 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval117)
+eval118 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle117, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle118 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval118)
+eval119 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle118, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle119 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval119)
+eval120 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle119, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle120 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval120)
+eval121 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle120, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle121 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval121)
+
+#Documentation
+[eval] This operator eval(__code, *args, **kwargs) evaluates the code block, where __code is the code (str) and *args and **kwargs are the arguments of the function. The output is the result of the evaluation, i.e., __code(*args, **kwargs).
+[BreakoutTracedEnv.step.<locals>.step_bundle] Take action in the environment and return the next observation..
+
+#Variables
+(code) __code0:def policy(obs):
+        '''
+        A policy that moves the paddle horizontally toward the ball.
+        If the ball is not detected, return FIRE to launch the ball.
+        
+        Action mapping for Breakout:
+            0 : NOOP
+            1 : FIRE
+            2 : Move right
+            3 : Move left
+        
+        Args:
+            obs (dict): A dictionary with keys "ball_pos" and "paddle_pos" representing 
+                        the positions of the ball and paddle.
+        Output:
+            action (int): The action to take.
+        '''
+        ball_pos = obs["ball_pos"]
+        paddle_pos = obs["paddle_pos"]
+
+        # If the ball is not detected, attempt to launch it.
+        if ball_pos is None:
+            return 1  # FIRE
+        
+        action = 0  # Default NOOP
+        if ball_pos and paddle_pos:
+            ball_x = ball_pos[0]
+            paddle_x = paddle_pos[0]
+            if paddle_x < ball_x - 10:
+                action = 2  # Move right
+            elif paddle_x > ball_x + 10:
+                action = 3  # Move left
+        return action
+
+#Constraints
+(code) __code0: The code should start with:
+def policy(obs):
+
+#Inputs
+(dict) getitem0={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': nan}
+
+#Others
+(int) eval0=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle0={'ball_pos': (61, 93), 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval1=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle1={'ball_pos': (57, 97), 'paddle_pos': (80, 157), 'reward': 0.0}
+(int) eval2=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle2={'ball_pos': (53, 101), 'paddle_pos': (58, 157), 'reward': 0.0}
+(int) eval3=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle3={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval4=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle4={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval5=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle5={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval6=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle6={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval7=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle7={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval8=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle8={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval9=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle9={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval10=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle10={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval11=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle11={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval12=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle12={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval13=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle13={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval14=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle14={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval15=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle15={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval16=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle16={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval17=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle17={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval18=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle18={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval19=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle19={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval20=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle20={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval21=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle21={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval22=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle22={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval23=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle23={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval24=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle24={'ball_pos': (68, 92), 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval25=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle25={'ball_pos': (72, 96), 'paddle_pos': (59, 157), 'reward': 0.0}
+(int) eval26=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle26={'ball_pos': (76, 100), 'paddle_pos': (81, 157), 'reward': 0.0}
+(int) eval27=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle27={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval28=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle28={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval29=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle29={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval30=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle30={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval31=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle31={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval32=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle32={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval33=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle33={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval34=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle34={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval35=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle35={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval36=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle36={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval37=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle37={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval38=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle38={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval39=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle39={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval40=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle40={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval41=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle41={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval42=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle42={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval43=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle43={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval44=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle44={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval45=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle45={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval46=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle46={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval47=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle47={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval48=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle48={'ball_pos': (127, 91), 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval49=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle49={'ball_pos': (123, 95), 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval50=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle50={'ball_pos': (119, 99), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval51=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle51={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval52=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle52={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval53=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle53={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval54=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle54={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval55=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle55={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval56=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle56={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval57=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle57={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval58=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle58={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval59=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle59={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval60=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle60={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval61=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle61={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval62=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle62={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval63=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle63={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval64=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle64={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval65=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle65={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval66=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle66={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval67=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle67={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval68=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle68={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval69=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle69={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval70=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle70={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval71=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle71={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval72=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle72={'ball_pos': (2, 90), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval73=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle73={'ball_pos': (6, 94), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval74=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle74={'ball_pos': (10, 98), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval75=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle75={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval76=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle76={'ball_pos': None, 'paddle_pos': (88, 157), 'reward': 0.0}
+(int) eval77=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle77={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval78=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle78={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval79=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle79={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval80=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle80={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval81=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle81={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval82=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle82={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval83=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle83={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval84=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle84={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval85=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle85={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval86=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle86={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval87=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle87={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval88=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle88={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval89=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle89={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval90=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle90={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval91=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle91={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval92=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle92={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval93=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle93={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval94=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle94={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval95=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle95={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval96=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle96={'ball_pos': None, 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval97=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle97={'ball_pos': (61, 93), 'paddle_pos': (87, 157), 'reward': 0.0}
+(int) eval98=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle98={'ball_pos': (57, 97), 'paddle_pos': (74, 157), 'reward': 0.0}
+(int) eval99=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle99={'ball_pos': (53, 101), 'paddle_pos': (52, 157), 'reward': 0.0}
+(int) eval100=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle100={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval101=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle101={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval102=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle102={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval103=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle103={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval104=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle104={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval105=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle105={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval106=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle106={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval107=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle107={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval108=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle108={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval109=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle109={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval110=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle110={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval111=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle111={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval112=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle112={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval113=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle113={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval114=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle114={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval115=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle115={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval116=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle116={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval117=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle117={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval118=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle118={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval119=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle119={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval120=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle120={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+(int) eval121=1
+
+#Outputs
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle121={'ball_pos': None, 'paddle_pos': (41, 157), 'reward': 0.0}
+
+#Feedback
+Episode ends after 122 steps with total score: 0.0
+Try to improve paddle positioning to hit the ball and break bricks.
+
+2025-02-24 22:27:11,318 - INFO - LLM response:
+LLM response:
+ {
+"reasoning": "The instruction indicates the need to modify the code to improve the paddle's positioning, which is crucial for successfully hitting the ball and breaking bricks in Breakout. The feedback states that the episode ends with a total score of 0.0, suggesting that the paddle did not successfully hit the ball throughout the game. In the execution of the code, the evaluation of the 'policy' shows that there are instances where the paddle position changes without hitting the ball effectively. The paddle position mainly remains at (41, 157) towards the end, which does not allow for interaction with the ball's position, leading to a lack of point scoring.\n\nTo improve this, we can modify the policy function code to ensure the paddle intelligently adjusts its position relative to the ball position when available. This change should help avoid the situation where the paddle is too far from the ball, thus increasing the chance of hitting it and scoring points. I suggest adjusting the condition of the paddle movement to better track the ball.\n\nThe code needs to effectively utilize the ball's x-coordinate to position the paddle within an optimal range to intercept it more frequently This optimization can lead to better results and might introduce some points from hitting the ball against the bricks. The current action judgment in the policy function could be enhanced to keep track of paddle movement towards the ball more effectively.",
+"answer": "The paddle's positioning needs adjustment to ensure it can effectively hit the ball as it moves.",
+"suggestion": {
+    "__code0": "def policy(obs):\n        '''\n        A policy that moves the paddle horizontally toward the ball.\n        If the ball is not detected, return FIRE to launch the ball.\n        \n        Action mapping for Breakout:\n            0 : NOOP\n            1 : FIRE\n            2 : Move right\n            3 : Move left\n        \n        Args:\n            obs (dict): A dictionary with keys \"ball_pos\" and \"paddle_pos\" representing \n                        the positions of the ball and paddle.\n        Output:\n            action (int): The action to take.\n        '''\n        ball_pos = obs[\"ball_pos\"]\n        paddle_pos = obs[\"paddle_pos\"]\n\n        # If the ball is not detected, attempt to launch it.\n        if ball_pos is None:\n            return 1  # FIRE\n        \n        action = 0  # Default NOOP\n        if ball_pos and paddle_pos:\n            ball_x = ball_pos[0]\n            paddle_x = paddle_pos[0]\n            if paddle_x < ball_x - 10:\n                action = 2  # Move right\n            elif paddle_x > ball_x + 10:\n                action = 3  # Move left\n            # Add logic to maintain paddle position closer to ball\n            elif abs(paddle_x - ball_x) <= 10:\n                action = 0  # No movement, stay aligned\n        return action"
+}
+}
+
+2025-02-24 22:27:11,319 - INFO - Iteration: 0, Feedback: Episode ends after 122 steps with total score: 0.0
+Try to improve paddle positioning to hit the ball and break bricks., Parameter: [<opto.trace.nodes.ParameterNode object at 0x324c32600>]
+2025-02-24 22:27:18,087 - INFO - Iteration: 1, Feedback: Episode ends after 179 steps with total score: 2.0
+Good job! You've hit some bricks., target: MessageNode: (BreakoutTracedEnv.step.<locals>.step_bundle:300, dtype=<class 'dict'>, data={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}), Parameter: [<opto.trace.nodes.ParameterNode object at 0x324c32600>]
+2025-02-24 22:27:18,150 - INFO - 
+#Instruction
+In Breakout, you control a paddle at the bottom of the screen to bounce a ball and break bricks. Fire the ball to launch it and then move the paddle left or right to intercept the ball. The goal is to score points by breaking bricks while keeping the ball in play. You need to change the <value> of the variables in #Variables to improve the output in accordance to #Feedback.
+
+#Code
+eval122 = eval(obs=getitem2, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle122 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval122)
+eval123 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle122, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle123 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval123)
+eval124 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle123, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle124 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval124)
+eval125 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle124, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle125 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval125)
+eval126 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle125, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle126 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval126)
+eval127 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle126, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle127 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval127)
+eval128 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle127, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle128 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval128)
+eval129 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle128, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle129 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval129)
+eval130 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle129, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle130 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval130)
+eval131 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle130, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle131 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval131)
+eval132 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle131, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle132 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval132)
+eval133 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle132, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle133 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval133)
+eval134 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle133, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle134 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval134)
+eval135 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle134, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle135 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval135)
+eval136 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle135, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle136 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval136)
+eval137 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle136, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle137 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval137)
+eval138 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle137, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle138 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval138)
+eval139 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle138, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle139 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval139)
+eval140 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle139, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle140 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval140)
+eval141 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle140, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle141 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval141)
+eval142 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle141, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle142 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval142)
+eval143 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle142, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle143 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval143)
+eval144 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle143, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle144 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval144)
+eval145 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle144, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle145 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval145)
+eval146 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle145, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle146 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval146)
+eval147 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle146, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle147 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval147)
+eval148 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle147, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle148 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval148)
+eval149 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle148, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle149 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval149)
+eval150 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle149, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle150 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval150)
+eval151 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle150, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle151 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval151)
+eval152 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle151, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle152 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval152)
+eval153 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle152, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle153 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval153)
+eval154 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle153, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle154 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval154)
+eval155 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle154, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle155 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval155)
+eval156 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle155, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle156 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval156)
+eval157 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle156, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle157 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval157)
+eval158 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle157, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle158 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval158)
+eval159 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle158, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle159 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval159)
+eval160 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle159, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle160 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval160)
+eval161 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle160, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle161 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval161)
+eval162 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle161, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle162 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval162)
+eval163 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle162, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle163 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval163)
+eval164 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle163, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle164 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval164)
+eval165 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle164, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle165 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval165)
+eval166 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle165, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle166 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval166)
+eval167 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle166, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle167 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval167)
+eval168 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle167, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle168 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval168)
+eval169 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle168, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle169 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval169)
+eval170 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle169, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle170 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval170)
+eval171 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle170, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle171 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval171)
+eval172 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle171, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle172 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval172)
+eval173 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle172, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle173 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval173)
+eval174 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle173, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle174 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval174)
+eval175 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle174, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle175 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval175)
+eval176 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle175, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle176 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval176)
+eval177 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle176, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle177 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval177)
+eval178 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle177, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle178 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval178)
+eval179 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle178, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle179 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval179)
+eval180 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle179, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle180 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval180)
+eval181 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle180, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle181 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval181)
+eval182 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle181, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle182 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval182)
+eval183 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle182, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle183 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval183)
+eval184 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle183, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle184 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval184)
+eval185 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle184, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle185 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval185)
+eval186 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle185, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle186 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval186)
+eval187 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle186, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle187 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval187)
+eval188 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle187, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle188 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval188)
+eval189 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle188, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle189 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval189)
+eval190 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle189, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle190 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval190)
+eval191 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle190, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle191 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval191)
+eval192 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle191, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle192 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval192)
+eval193 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle192, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle193 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval193)
+eval194 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle193, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle194 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval194)
+eval195 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle194, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle195 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval195)
+eval196 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle195, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle196 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval196)
+eval197 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle196, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle197 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval197)
+eval198 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle197, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle198 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval198)
+eval199 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle198, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle199 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval199)
+eval200 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle199, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle200 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval200)
+eval201 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle200, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle201 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval201)
+eval202 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle201, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle202 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval202)
+eval203 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle202, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle203 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval203)
+eval204 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle203, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle204 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval204)
+eval205 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle204, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle205 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval205)
+eval206 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle205, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle206 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval206)
+eval207 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle206, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle207 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval207)
+eval208 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle207, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle208 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval208)
+eval209 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle208, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle209 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval209)
+eval210 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle209, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle210 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval210)
+eval211 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle210, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle211 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval211)
+eval212 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle211, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle212 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval212)
+eval213 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle212, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle213 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval213)
+eval214 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle213, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle214 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval214)
+eval215 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle214, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle215 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval215)
+eval216 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle215, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle216 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval216)
+eval217 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle216, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle217 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval217)
+eval218 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle217, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle218 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval218)
+eval219 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle218, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle219 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval219)
+eval220 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle219, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle220 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval220)
+eval221 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle220, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle221 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval221)
+eval222 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle221, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle222 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval222)
+eval223 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle222, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle223 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval223)
+eval224 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle223, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle224 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval224)
+eval225 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle224, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle225 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval225)
+eval226 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle225, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle226 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval226)
+eval227 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle226, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle227 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval227)
+eval228 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle227, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle228 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval228)
+eval229 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle228, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle229 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval229)
+eval230 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle229, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle230 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval230)
+eval231 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle230, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle231 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval231)
+eval232 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle231, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle232 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval232)
+eval233 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle232, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle233 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval233)
+eval234 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle233, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle234 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval234)
+eval235 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle234, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle235 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval235)
+eval236 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle235, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle236 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval236)
+eval237 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle236, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle237 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval237)
+eval238 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle237, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle238 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval238)
+eval239 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle238, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle239 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval239)
+eval240 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle239, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle240 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval240)
+eval241 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle240, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle241 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval241)
+eval242 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle241, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle242 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval242)
+eval243 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle242, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle243 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval243)
+eval244 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle243, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle244 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval244)
+eval245 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle244, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle245 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval245)
+eval246 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle245, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle246 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval246)
+eval247 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle246, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle247 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval247)
+eval248 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle247, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle248 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval248)
+eval249 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle248, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle249 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval249)
+eval250 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle249, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle250 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval250)
+eval251 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle250, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle251 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval251)
+eval252 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle251, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle252 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval252)
+eval253 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle252, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle253 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval253)
+eval254 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle253, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle254 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval254)
+eval255 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle254, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle255 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval255)
+eval256 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle255, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle256 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval256)
+eval257 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle256, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle257 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval257)
+eval258 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle257, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle258 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval258)
+eval259 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle258, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle259 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval259)
+eval260 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle259, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle260 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval260)
+eval261 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle260, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle261 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval261)
+eval262 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle261, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle262 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval262)
+eval263 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle262, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle263 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval263)
+eval264 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle263, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle264 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval264)
+eval265 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle264, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle265 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval265)
+eval266 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle265, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle266 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval266)
+eval267 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle266, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle267 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval267)
+eval268 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle267, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle268 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval268)
+eval269 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle268, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle269 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval269)
+eval270 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle269, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle270 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval270)
+eval271 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle270, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle271 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval271)
+eval272 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle271, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle272 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval272)
+eval273 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle272, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle273 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval273)
+eval274 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle273, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle274 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval274)
+eval275 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle274, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle275 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval275)
+eval276 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle275, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle276 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval276)
+eval277 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle276, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle277 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval277)
+eval278 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle277, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle278 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval278)
+eval279 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle278, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle279 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval279)
+eval280 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle279, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle280 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval280)
+eval281 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle280, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle281 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval281)
+eval282 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle281, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle282 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval282)
+eval283 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle282, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle283 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval283)
+eval284 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle283, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle284 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval284)
+eval285 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle284, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle285 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval285)
+eval286 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle285, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle286 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval286)
+eval287 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle286, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle287 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval287)
+eval288 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle287, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle288 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval288)
+eval289 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle288, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle289 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval289)
+eval290 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle289, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle290 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval290)
+eval291 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle290, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle291 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval291)
+eval292 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle291, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle292 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval292)
+eval293 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle292, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle293 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval293)
+eval294 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle293, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle294 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval294)
+eval295 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle294, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle295 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval295)
+eval296 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle295, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle296 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval296)
+eval297 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle296, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle297 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval297)
+eval298 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle297, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle298 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval298)
+eval299 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle298, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle299 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval299)
+eval300 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle299, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle300 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval300)
+
+#Documentation
+[eval] This operator eval(__code, *args, **kwargs) evaluates the code block, where __code is the code (str) and *args and **kwargs are the arguments of the function. The output is the result of the evaluation, i.e., __code(*args, **kwargs).
+[BreakoutTracedEnv.step.<locals>.step_bundle] Take action in the environment and return the next observation..
+
+#Variables
+(code) __code0:def policy(obs):
+        '''
+        A policy that moves the paddle horizontally toward the ball.
+        If the ball is not detected, return FIRE to launch the ball.
+        
+        Action mapping for Breakout:
+            0 : NOOP
+            1 : FIRE
+            2 : Move right
+            3 : Move left
+        
+        Args:
+            obs (dict): A dictionary with keys "ball_pos" and "paddle_pos" representing 
+                        the positions of the ball and paddle.
+        Output:
+            action (int): The action to take.
+        '''
+        ball_pos = obs["ball_pos"]
+        paddle_pos = obs["paddle_pos"]
+
+        # If the ball is not detected, attempt to launch it.
+        if ball_pos is None:
+            return 1  # FIRE
+        
+        action = 0  # Default NOOP
+        if ball_pos and paddle_pos:
+            ball_x = ball_pos[0]
+            paddle_x = paddle_pos[0]
+            if paddle_x < ball_x - 10:
+                action = 2  # Move right
+            elif paddle_x > ball_x + 10:
+                action = 3  # Move left
+            # Add logic to maintain paddle position closer to ball
+            elif abs(paddle_x - ball_x) <= 10:
+                action = 0  # No movement, stay aligned
+        return action
+
+#Constraints
+(code) __code0: The code should start with:
+def policy(obs):
+
+#Inputs
+(dict) getitem2={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': nan}
+
+#Others
+(int) eval122=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle122={'ball_pos': (61, 93), 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval123=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle123={'ball_pos': (57, 97), 'paddle_pos': (80, 157), 'reward': 0.0}
+(int) eval124=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle124={'ball_pos': (53, 101), 'paddle_pos': (58, 157), 'reward': 0.0}
+(int) eval125=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle125={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval126=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle126={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval127=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle127={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval128=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle128={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval129=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle129={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval130=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle130={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval131=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle131={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval132=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle132={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval133=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle133={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval134=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle134={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval135=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle135={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval136=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle136={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval137=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle137={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval138=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle138={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval139=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle139={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval140=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle140={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval141=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle141={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval142=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle142={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval143=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle143={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval144=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle144={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval145=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle145={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval146=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle146={'ball_pos': (68, 92), 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval147=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle147={'ball_pos': (72, 96), 'paddle_pos': (50, 157), 'reward': 0.0}
+(int) eval148=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle148={'ball_pos': (76, 100), 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval149=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle149={'ball_pos': None, 'paddle_pos': (93, 157), 'reward': 0.0}
+(int) eval150=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle150={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval151=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle151={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval152=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle152={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval153=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle153={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval154=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle154={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval155=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle155={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval156=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle156={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval157=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle157={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval158=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle158={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval159=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle159={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval160=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle160={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval161=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle161={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval162=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle162={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval163=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle163={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval164=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle164={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval165=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle165={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval166=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle166={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval167=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle167={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval168=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle168={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval169=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle169={'ball_pos': None, 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval170=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle170={'ball_pos': (127, 91), 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval171=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle171={'ball_pos': (123, 95), 'paddle_pos': (115, 157), 'reward': 0.0}
+(int) eval172=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle172={'ball_pos': (119, 99), 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval173=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle173={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval174=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle174={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval175=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle175={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval176=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle176={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval177=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle177={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval178=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle178={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval179=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle179={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval180=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle180={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval181=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle181={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval182=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle182={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval183=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle183={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval184=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle184={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval185=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle185={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval186=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle186={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval187=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle187={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval188=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle188={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval189=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle189={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval190=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle190={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval191=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle191={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval192=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle192={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval193=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle193={'ball_pos': None, 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval194=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle194={'ball_pos': (2, 90), 'paddle_pos': (115, 120), 'reward': 0.0}
+(int) eval195=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle195={'ball_pos': (6, 94), 'paddle_pos': (123, 157), 'reward': 0.0}
+(int) eval196=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle196={'ball_pos': (10, 98), 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval197=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle197={'ball_pos': None, 'paddle_pos': (80, 157), 'reward': 0.0}
+(int) eval198=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle198={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval199=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle199={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval200=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle200={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval201=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle201={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval202=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle202={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval203=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle203={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval204=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle204={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval205=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle205={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval206=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle206={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval207=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle207={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval208=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle208={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval209=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle209={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval210=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle210={'ball_pos': None, 'paddle_pos': (69, 120), 'reward': 0.0}
+(int) eval211=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle211={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval212=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle212={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval213=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle213={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval214=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle214={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval215=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle215={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval216=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle216={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval217=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle217={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval218=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle218={'ball_pos': None, 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval219=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle219={'ball_pos': (30, 100), 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval220=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle220={'ball_pos': (26, 94), 'paddle_pos': (67, 157), 'reward': 0.0}
+(int) eval221=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle221={'ball_pos': (22, 88), 'paddle_pos': (46, 157), 'reward': 0.0}
+(int) eval222=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle222={'ball_pos': (18, 82), 'paddle_pos': (22, 157), 'reward': 0.0}
+(int) eval223=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle223={'ball_pos': (14, 76), 'paddle_pos': (13, 157), 'reward': 0.0}
+(int) eval224=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle224={'ball_pos': (10, 70), 'paddle_pos': (13, 157), 'reward': 0.0}
+(int) eval225=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle225={'ball_pos': (6, 64), 'paddle_pos': (13, 157), 'reward': 0.0}
+(int) eval226=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle226={'ball_pos': (2, 64), 'paddle_pos': (13, 157), 'reward': 1.0}
+(int) eval227=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle227={'ball_pos': None, 'paddle_pos': (10, 157), 'reward': 0.0}
+(int) eval228=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle228={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval229=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle229={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval230=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle230={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval231=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle231={'ball_pos': (4, 94), 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval232=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle232={'ball_pos': (8, 100), 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval233=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle233={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval234=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle234={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval235=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle235={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval236=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle236={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval237=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle237={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval238=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle238={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval239=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle239={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval240=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle240={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval241=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle241={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval242=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle242={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval243=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle243={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval244=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle244={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval245=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle245={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval246=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle246={'ball_pos': None, 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval247=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle247={'ball_pos': (127, 91), 'paddle_pos': (10, 120), 'reward': 0.0}
+(int) eval248=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle248={'ball_pos': (123, 95), 'paddle_pos': (8, 157), 'reward': 0.0}
+(int) eval249=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle249={'ball_pos': (119, 99), 'paddle_pos': (29, 157), 'reward': 0.0}
+(int) eval250=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle250={'ball_pos': None, 'paddle_pos': (53, 157), 'reward': 0.0}
+(int) eval251=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle251={'ball_pos': None, 'paddle_pos': (67, 157), 'reward': 0.0}
+(int) eval252=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle252={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval253=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle253={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval254=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle254={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval255=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle255={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval256=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle256={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval257=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle257={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval258=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle258={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval259=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle259={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval260=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle260={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval261=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle261={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval262=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle262={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval263=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle263={'ball_pos': None, 'paddle_pos': (68, 120), 'reward': 0.0}
+(int) eval264=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle264={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval265=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle265={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval266=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle266={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval267=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle267={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval268=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle268={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval269=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle269={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval270=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle270={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval271=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle271={'ball_pos': None, 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval272=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle272={'ball_pos': (27, 99), 'paddle_pos': (68, 157), 'reward': 0.0}
+(int) eval273=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle273={'ball_pos': (23, 93), 'paddle_pos': (66, 157), 'reward': 0.0}
+(int) eval274=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle274={'ball_pos': (19, 87), 'paddle_pos': (46, 157), 'reward': 0.0}
+(int) eval275=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle275={'ball_pos': (15, 81), 'paddle_pos': (22, 157), 'reward': 0.0}
+(int) eval276=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle276={'ball_pos': (11, 75), 'paddle_pos': (8, 157), 'reward': 0.0}
+(int) eval277=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle277={'ball_pos': (7, 69), 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval278=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle278={'ball_pos': (3, 63), 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval279=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle279={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 1.0}
+(int) eval280=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle280={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval281=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle281={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval282=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle282={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval283=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle283={'ball_pos': (3, 87), 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval284=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle284={'ball_pos': (7, 93), 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval285=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle285={'ball_pos': (11, 99), 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval286=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle286={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval287=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle287={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval288=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle288={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval289=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle289={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval290=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle290={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval291=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle291={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval292=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle292={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval293=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle293={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval294=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle294={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval295=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle295={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval296=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle296={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval297=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle297={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval298=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle298={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval299=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle299={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+(int) eval300=1
+
+#Outputs
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle300={'ball_pos': None, 'paddle_pos': (8, 120), 'reward': 0.0}
+
+#Feedback
+Episode ends after 179 steps with total score: 2.0
+Good job! You've hit some bricks.
+
+2025-02-24 22:27:26,989 - INFO - LLM response:
+LLM response:
+ {
+"reasoning": "The instruction emphasizes improving the paddle's positioning strategies in the game to enhance performance and score. The feedback from the previous execution hints that the paddle's placement could be more strategic to improve the chances of hitting the ball and consequently breaking bricks. In the last run, the total score was only 2.0 after hitting some bricks. This suggests that the paddle was not optimally placed at times since the strategy indicated a consistent firing when the ball was unrecognized and a reaction when the ball was detected.\n\nOne adjustment could involve more nuanced paddle movements based on the ball's position, as well as deducing when to fire or reposition for better alignment with the ball. As indicated in the documentation, it is critical to track the ball's position against the paddle's position with more intelligent movement, instead of defaulting to a no-operation (NOOP) action. Specifically, allowing for minor inertial movements when the ball's position is within a certain proximity could help maintain the paddle at an optimal position.\n\nA better placement strategy could lead to higher scores as it may help in continuously hitting the ball instead of repeatedly firing when it’s out of range or missing it altogether when it falls outside the paddle's reach. The changes are reflected in improved logic in the returning action section of the code, guiding the policy in a way that considers the ball's deviation from the paddle along with dynamic movements.",
+
+"answer": "Improve the paddle's positioning by modifying policy logic.",
+
+"suggestion": {
+    "__code0": "def policy(obs):\n        '''\n        A policy that moves the paddle horizontally toward the ball.\n        If the ball is not detected, return FIRE to launch the ball.\n        \n        Action mapping for Breakout:\n            0 : NOOP\n            1 : FIRE\n            2 : Move right\n            3 : Move left\n        \n        Args:\n            obs (dict): A dictionary with keys \"ball_pos\" and \"paddle_pos\" representing \n                        the positions of the ball and paddle.\n        Output:\n            action (int): The action to take.\n        '''\n        ball_pos = obs[\"ball_pos\"]\n        paddle_pos = obs[\"paddle_pos\"]\n\n        # If the ball is not detected, attempt to launch it.\n        if ball_pos is None:\n            return 1  # FIRE\n        \n        action = 0  # Default NOOP\n        if ball_pos and paddle_pos:\n            ball_x = ball_pos[0]\n            paddle_x = paddle_pos[0]\n            if paddle_x < ball_x - 10:\n                action = 2  # Move right\n            elif paddle_x > ball_x + 10:\n                action = 3  # Move left\n            else:\n                action = 0  # No movement if aligned\n        return action"
+}
+}
+
+2025-02-24 22:27:26,990 - INFO - Iteration: 1, Feedback: Episode ends after 179 steps with total score: 2.0
+Good job! You've hit some bricks., Parameter: [<opto.trace.nodes.ParameterNode object at 0x324c32600>]
+2025-02-24 22:27:31,487 - INFO - Iteration: 2, Feedback: Episode ends after 122 steps with total score: 0.0
+Try to improve paddle positioning to hit the ball and break bricks., target: MessageNode: (BreakoutTracedEnv.step.<locals>.step_bundle:422, dtype=<class 'dict'>, data={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}), Parameter: [<opto.trace.nodes.ParameterNode object at 0x324c32600>]
+2025-02-24 22:27:31,529 - INFO - 
+#Instruction
+In Breakout, you control a paddle at the bottom of the screen to bounce a ball and break bricks. Fire the ball to launch it and then move the paddle left or right to intercept the ball. The goal is to score points by breaking bricks while keeping the ball in play. You need to change the <value> of the variables in #Variables to improve the output in accordance to #Feedback.
+
+#Code
+eval301 = eval(obs=getitem4, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle301 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval301)
+eval302 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle301, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle302 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval302)
+eval303 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle302, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle303 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval303)
+eval304 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle303, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle304 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval304)
+eval305 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle304, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle305 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval305)
+eval306 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle305, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle306 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval306)
+eval307 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle306, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle307 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval307)
+eval308 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle307, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle308 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval308)
+eval309 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle308, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle309 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval309)
+eval310 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle309, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle310 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval310)
+eval311 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle310, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle311 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval311)
+eval312 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle311, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle312 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval312)
+eval313 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle312, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle313 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval313)
+eval314 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle313, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle314 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval314)
+eval315 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle314, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle315 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval315)
+eval316 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle315, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle316 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval316)
+eval317 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle316, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle317 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval317)
+eval318 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle317, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle318 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval318)
+eval319 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle318, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle319 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval319)
+eval320 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle319, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle320 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval320)
+eval321 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle320, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle321 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval321)
+eval322 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle321, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle322 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval322)
+eval323 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle322, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle323 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval323)
+eval324 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle323, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle324 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval324)
+eval325 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle324, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle325 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval325)
+eval326 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle325, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle326 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval326)
+eval327 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle326, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle327 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval327)
+eval328 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle327, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle328 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval328)
+eval329 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle328, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle329 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval329)
+eval330 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle329, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle330 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval330)
+eval331 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle330, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle331 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval331)
+eval332 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle331, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle332 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval332)
+eval333 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle332, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle333 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval333)
+eval334 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle333, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle334 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval334)
+eval335 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle334, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle335 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval335)
+eval336 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle335, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle336 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval336)
+eval337 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle336, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle337 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval337)
+eval338 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle337, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle338 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval338)
+eval339 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle338, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle339 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval339)
+eval340 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle339, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle340 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval340)
+eval341 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle340, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle341 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval341)
+eval342 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle341, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle342 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval342)
+eval343 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle342, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle343 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval343)
+eval344 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle343, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle344 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval344)
+eval345 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle344, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle345 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval345)
+eval346 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle345, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle346 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval346)
+eval347 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle346, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle347 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval347)
+eval348 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle347, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle348 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval348)
+eval349 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle348, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle349 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval349)
+eval350 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle349, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle350 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval350)
+eval351 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle350, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle351 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval351)
+eval352 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle351, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle352 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval352)
+eval353 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle352, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle353 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval353)
+eval354 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle353, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle354 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval354)
+eval355 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle354, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle355 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval355)
+eval356 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle355, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle356 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval356)
+eval357 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle356, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle357 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval357)
+eval358 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle357, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle358 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval358)
+eval359 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle358, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle359 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval359)
+eval360 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle359, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle360 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval360)
+eval361 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle360, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle361 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval361)
+eval362 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle361, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle362 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval362)
+eval363 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle362, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle363 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval363)
+eval364 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle363, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle364 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval364)
+eval365 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle364, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle365 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval365)
+eval366 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle365, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle366 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval366)
+eval367 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle366, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle367 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval367)
+eval368 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle367, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle368 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval368)
+eval369 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle368, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle369 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval369)
+eval370 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle369, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle370 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval370)
+eval371 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle370, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle371 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval371)
+eval372 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle371, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle372 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval372)
+eval373 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle372, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle373 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval373)
+eval374 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle373, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle374 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval374)
+eval375 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle374, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle375 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval375)
+eval376 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle375, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle376 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval376)
+eval377 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle376, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle377 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval377)
+eval378 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle377, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle378 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval378)
+eval379 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle378, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle379 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval379)
+eval380 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle379, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle380 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval380)
+eval381 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle380, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle381 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval381)
+eval382 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle381, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle382 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval382)
+eval383 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle382, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle383 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval383)
+eval384 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle383, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle384 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval384)
+eval385 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle384, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle385 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval385)
+eval386 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle385, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle386 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval386)
+eval387 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle386, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle387 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval387)
+eval388 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle387, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle388 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval388)
+eval389 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle388, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle389 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval389)
+eval390 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle389, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle390 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval390)
+eval391 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle390, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle391 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval391)
+eval392 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle391, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle392 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval392)
+eval393 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle392, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle393 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval393)
+eval394 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle393, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle394 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval394)
+eval395 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle394, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle395 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval395)
+eval396 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle395, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle396 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval396)
+eval397 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle396, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle397 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval397)
+eval398 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle397, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle398 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval398)
+eval399 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle398, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle399 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval399)
+eval400 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle399, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle400 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval400)
+eval401 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle400, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle401 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval401)
+eval402 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle401, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle402 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval402)
+eval403 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle402, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle403 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval403)
+eval404 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle403, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle404 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval404)
+eval405 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle404, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle405 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval405)
+eval406 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle405, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle406 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval406)
+eval407 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle406, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle407 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval407)
+eval408 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle407, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle408 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval408)
+eval409 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle408, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle409 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval409)
+eval410 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle409, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle410 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval410)
+eval411 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle410, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle411 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval411)
+eval412 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle411, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle412 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval412)
+eval413 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle412, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle413 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval413)
+eval414 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle413, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle414 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval414)
+eval415 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle414, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle415 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval415)
+eval416 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle415, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle416 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval416)
+eval417 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle416, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle417 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval417)
+eval418 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle417, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle418 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval418)
+eval419 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle418, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle419 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval419)
+eval420 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle419, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle420 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval420)
+eval421 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle420, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle421 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval421)
+eval422 = eval(obs=BreakoutTracedEnv.step.<locals>.step_bundle421, __code=__code0)
+BreakoutTracedEnv.step.<locals>.step_bundle422 = BreakoutTracedEnv.step.<locals>.step_bundle(action=eval422)
+
+#Documentation
+[eval] This operator eval(__code, *args, **kwargs) evaluates the code block, where __code is the code (str) and *args and **kwargs are the arguments of the function. The output is the result of the evaluation, i.e., __code(*args, **kwargs).
+[BreakoutTracedEnv.step.<locals>.step_bundle] Take action in the environment and return the next observation..
+
+#Variables
+(code) __code0:def policy(obs):
+        '''
+        A policy that moves the paddle horizontally toward the ball.
+        If the ball is not detected, return FIRE to launch the ball.
+        
+        Action mapping for Breakout:
+            0 : NOOP
+            1 : FIRE
+            2 : Move right
+            3 : Move left
+        
+        Args:
+            obs (dict): A dictionary with keys "ball_pos" and "paddle_pos" representing 
+                        the positions of the ball and paddle.
+        Output:
+            action (int): The action to take.
+        '''
+        ball_pos = obs["ball_pos"]
+        paddle_pos = obs["paddle_pos"]
+
+        # If the ball is not detected, attempt to launch it.
+        if ball_pos is None:
+            return 1  # FIRE
+        
+        action = 0  # Default NOOP
+        if ball_pos and paddle_pos:
+            ball_x = ball_pos[0]
+            paddle_x = paddle_pos[0]
+            if paddle_x < ball_x - 10:
+                action = 2  # Move right
+            elif paddle_x > ball_x + 10:
+                action = 3  # Move left
+            else:
+                action = 0  # No movement if aligned
+        return action
+
+#Constraints
+(code) __code0: The code should start with:
+def policy(obs):
+
+#Inputs
+(dict) getitem4={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': nan}
+
+#Others
+(int) eval301=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle301={'ball_pos': (61, 93), 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval302=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle302={'ball_pos': (57, 97), 'paddle_pos': (80, 157), 'reward': 0.0}
+(int) eval303=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle303={'ball_pos': (53, 101), 'paddle_pos': (58, 157), 'reward': 0.0}
+(int) eval304=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle304={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval305=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle305={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval306=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle306={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval307=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle307={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval308=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle308={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval309=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle309={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval310=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle310={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval311=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle311={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval312=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle312={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval313=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle313={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval314=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle314={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval315=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle315={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval316=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle316={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval317=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle317={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval318=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle318={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval319=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle319={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval320=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle320={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval321=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle321={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval322=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle322={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval323=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle323={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval324=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle324={'ball_pos': None, 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval325=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle325={'ball_pos': (68, 92), 'paddle_pos': (47, 157), 'reward': 0.0}
+(int) eval326=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle326={'ball_pos': (72, 96), 'paddle_pos': (59, 157), 'reward': 0.0}
+(int) eval327=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle327={'ball_pos': (76, 100), 'paddle_pos': (81, 157), 'reward': 0.0}
+(int) eval328=0
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle328={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval329=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle329={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval330=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle330={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval331=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle331={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval332=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle332={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval333=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle333={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval334=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle334={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval335=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle335={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval336=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle336={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval337=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle337={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval338=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle338={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval339=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle339={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval340=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle340={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval341=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle341={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval342=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle342={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval343=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle343={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval344=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle344={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval345=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle345={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval346=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle346={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval347=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle347={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval348=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle348={'ball_pos': None, 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval349=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle349={'ball_pos': (127, 91), 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval350=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle350={'ball_pos': (123, 95), 'paddle_pos': (104, 157), 'reward': 0.0}
+(int) eval351=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle351={'ball_pos': (119, 99), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval352=2
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle352={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval353=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle353={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval354=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle354={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval355=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle355={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval356=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle356={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval357=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle357={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval358=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle358={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval359=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle359={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval360=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle360={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval361=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle361={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval362=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle362={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval363=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle363={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval364=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle364={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval365=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle365={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval366=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle366={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval367=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle367={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval368=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle368={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval369=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle369={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval370=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle370={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval371=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle371={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval372=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle372={'ball_pos': None, 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval373=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle373={'ball_pos': (2, 90), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval374=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle374={'ball_pos': (6, 94), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval375=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle375={'ball_pos': (10, 98), 'paddle_pos': (104, 120), 'reward': 0.0}
+(int) eval376=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle376={'ball_pos': None, 'paddle_pos': (114, 157), 'reward': 0.0}
+(int) eval377=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle377={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval378=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle378={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval379=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle379={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval380=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle380={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval381=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle381={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval382=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle382={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval383=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle383={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval384=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle384={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval385=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle385={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval386=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle386={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval387=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle387={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval388=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle388={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval389=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle389={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval390=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle390={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval391=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle391={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval392=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle392={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval393=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle393={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval394=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle394={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval395=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle395={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval396=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle396={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval397=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle397={'ball_pos': None, 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval398=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle398={'ball_pos': (61, 93), 'paddle_pos': (105, 157), 'reward': 0.0}
+(int) eval399=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle399={'ball_pos': (57, 97), 'paddle_pos': (92, 157), 'reward': 0.0}
+(int) eval400=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle400={'ball_pos': (53, 101), 'paddle_pos': (69, 157), 'reward': 0.0}
+(int) eval401=3
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle401={'ball_pos': None, 'paddle_pos': (46, 157), 'reward': 0.0}
+(int) eval402=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle402={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval403=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle403={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval404=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle404={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval405=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle405={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval406=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle406={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval407=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle407={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval408=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle408={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval409=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle409={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval410=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle410={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval411=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle411={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval412=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle412={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval413=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle413={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval414=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle414={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval415=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle415={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval416=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle416={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval417=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle417={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval418=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle418={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval419=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle419={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval420=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle420={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval421=1
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle421={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+(int) eval422=1
+
+#Outputs
+(dict) BreakoutTracedEnv.step.<locals>.step_bundle422={'ball_pos': None, 'paddle_pos': (35, 157), 'reward': 0.0}
+
+#Feedback
+Episode ends after 122 steps with total score: 0.0
+Try to improve paddle positioning to hit the ball and break bricks.
+
