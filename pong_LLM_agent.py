@@ -205,10 +205,38 @@ def optimize_policy(
         Output:
             action (int): The action to take among 0 (NOOP), 1 (FIRE), 2 (DOWN), 3 (UP).
         '''
-        ball_pos = obs.get("ball_pos", None)
-        paddle_pos = obs.get("paddle_pos", None)
-
-        return 0  # NOOP if no data is available
+        ball_pos = obs.get('ball_pos', None)
+        prev_ball_pos = obs.get('prev_ball_pos', None)
+        paddle_pos = obs.get('paddle_pos', None)
+        
+        if ball_pos is None or paddle_pos is None:
+            return 0  # NOOP if no ball or paddle
+        
+        # Ball's vertical center
+        ball_y = ball_pos[1] + ball_pos[3] // 2
+        
+        # Paddle's vertical center and dimensions
+        paddle_y = paddle_pos[1] + paddle_pos[3] // 2
+        paddle_height = paddle_pos[3]
+        
+        # Predict ball movement if previous position exists
+        predicted_ball_y = ball_y
+        if prev_ball_pos is not None:
+            prev_ball_center = prev_ball_pos[1] + prev_ball_pos[3] // 2
+            ball_velocity = ball_y - prev_ball_center
+            predicted_ball_y += ball_velocity
+        
+        # Create a small buffer zone around paddle center
+        upper_buffer = paddle_y - paddle_height // 4
+        lower_buffer = paddle_y + paddle_height // 4
+        
+        # More nuanced positioning
+        if predicted_ball_y < upper_buffer:
+            return 3  # Move UP
+        elif predicted_ball_y > lower_buffer:
+            return 2  # Move DOWN
+        else:
+            return 0  # NOOP if ball is within paddle's center zone
     
     # Get the config file path from environment variable
     # config_path = os.getenv("OAI_CONFIG_LIST")
