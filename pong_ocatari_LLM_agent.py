@@ -114,7 +114,9 @@ class Policy(Module):
     @bundle(trainable=True)
     def predict_ball_trajectory(self, obs):
         """
-        Given current observation, compute the velocity of the ball and predict the y coordinate of the ball when it reaches the player's paddle. 
+        Given current observation, compute the velocity of the ball and predict the y coordinate of the ball when it reaches the player's paddle.
+        Take into account the fact that the ball would bounce and wrap around top and bottom boundary in the game screen, 
+        use the ball movement trace to infer where the top (around 30) and bottom boundary (around 180) locates in the screen.
         
         Args:
             obs (dict): Dictionary of current game state, mapping keys ("Player", "Ball", "Enemy") to values (dictionary of keys ('x', 'y', 'w', 'h', 'dx', 'dy') to integer values)
@@ -123,24 +125,15 @@ class Policy(Module):
             float: The predicted y-coordinate where the ball will reach the player's side
         """
         if 'Ball' in obs:
-            ball_y = obs['Ball'].get('y')
-            ball_dy = obs['Ball'].get('dy', 0)
-            ball_x = obs['Ball'].get('x', 0)
-            player_x = obs['Player'].get('x', 0)
-            ball_dx = obs['Ball'].get('dx', 0)
-
-            if ball_y is not None and ball_dy is not None:
-                if ball_dx == 0:  # Considering if ball is not moving horizontally
-                    return ball_y
-                frames_to_reach = (player_x - ball_x) / max(1, ball_dx)  # Ensure non-zero division
-                predicted_y = ball_y + ball_dy * frames_to_reach
-                return predicted_y
+                return obs['Ball'].get("y", None)
         return None
     
     @bundle(trainable=True)
     def select_action(self, predicted_ball_y, obs):
         '''
         Select the optimal action of the player paddle comparing current player position and predicted ball y coordinate.
+        If the player paddle is around the predicted ball y coordinate (taking into account the edges of paddle), return NOOP. Otherwise, move the paddle UP or DOWN to predicted ball y coordinate.
+        Ensure stable movement to avoid missing the ball when close by.
 
         Args:
             predicted_ball_y (float): predicted y coordinate of the ball or None
@@ -155,11 +148,26 @@ class Policy(Module):
 
             if player_y is not None and player_height is not None:
                 player_center = player_y + player_height / 2
-                if player_center < predicted_ball_y:
-                    return 3
-                elif player_center > predicted_ball_y:
-                    return 2
+                
+                # Increase tolerance for more stable movement
+                center_tolerance = 10  # Central deadzone
+                edge_tolerance = 5     # Additional tolerance near paddle edges
+                
+                # Calculate distance to predicted position
+                distance = predicted_ball_y - player_center
+                
+                # Add extra tolerance near the edges of the paddle
+                if abs(distance) <= center_tolerance:
+                    return 0  # Stay still if ball is roughly centered
+                elif abs(distance) <= player_height/2 + edge_tolerance:
+                    # If we're close to intercepting with the paddle edge, don't move
+                    return 0
+                elif distance > 0:
+                    return 3  # UP
+                else:
+                    return 2  # DOWN
         return 0
+        
 
 
 def rollout(env, horizon, policy):
@@ -251,13 +259,16 @@ def optimize_policy(
 
             if error is None:
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
-                mean_rewards, std_rewards = test_policy(policy)
+                mean_rewards, std_rewards = test_policy(policy) # run the policy on 10 games of length 4000 steps each
                 if mean_rewards >= 19:
                     feedback += f"\nGood job! You're close to winning the game!"
                 if mean_rewards > 0:
-                    feedback += f"\nKeep it up! You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev {std_rewards} but you are still {21-mean_rewards} points from winning the game. Try improving paddle positioning to prevent opponent scoring."
+                    feedback += f"\nKeep it up! You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev \{std_rewards} \
+                                 but you are still {21-mean_rewards} points from winning the game. \
+                                 Try improving paddle positioning to prevent opponent scoring."
                 elif mean_rewards <= 0:
-                    feedback += f"\nYour score is {mean_rewards} points on average of 10 games with std dev {std_rewards}. Try to improve paddle positioning to prevent opponent scoring."
+                    feedback += f"\nYour score is {mean_rewards} points on average of 10 games with std dev {std_rewards}. \
+                                  Try to improve paddle positioning to prevent opponent scoring."
                 target = traj['observations'][-1]
                 
                 rewards.append(sum(traj['rewards']))
@@ -267,10 +278,11 @@ def optimize_policy(
             
             logger.info(f"Iteration: {i}, Feedback: {feedback}, target: {target}, Parameter: {policy.parameters()}")
 
-            instruction = "In Pong, you control the right paddle and compete against the computer on the left. "
-            instruction += "The goal is to keep deflecting the ball away from your goal and into your opponent's goal to maximize your score and win the game by scoring close to 21 points. "
-            instruction += "You score one point when the opponent misses the ball or hits it out of bounds. "
+            instruction = "In Pong, you control the right paddle and compete against the enemy on the left. "
+            instruction += "The goal is to keep deflecting the ball away from your goal and into your enemy's goal to maximize your score and win the game by scoring close to 21 points. "
+            instruction += "You score one point when the enemy misses the ball and the ball goes out of bounds on the enemy's side. "
             instruction += "The policy should move the paddle up or down or NOOP to hit the ball. If the paddle is below the ball, move the paddle up; otherwise, move the paddle down."
+            instruction += "Analyze the trace to figure out the reason why you lose the game and optimize the code to score higher and higher points."
             
             optimizer.objective = optimizer.default_objective + instruction 
             
