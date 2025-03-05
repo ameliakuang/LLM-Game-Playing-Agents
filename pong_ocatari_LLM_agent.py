@@ -1,14 +1,14 @@
 import os
 import ale_py
-import cv2
 import logging
 import datetime
-import sys
 from pathlib import Path
 import numpy as np
+import pandas as pd
 import io
 import contextlib
-from copy import copy
+import random
+
 
 from dotenv import load_dotenv
 from autogen import config_list_from_json
@@ -22,17 +22,26 @@ from ocatari.core import OCAtari
 
 load_dotenv()
 gym.register_envs(ale_py)
+timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+log_dir = Path("logs")
+log_dir.mkdir(exist_ok=True)
+base_trace_ckpt_dir = Path("trace_ckpt")
+base_trace_ckpt_dir.mkdir(exist_ok=True)
 
 class PongOCAtariTracedEnv:
     def __init__(self, 
                  env_name="ALE/Pong-v5",
                  render_mode="human",
                  obs_mode="obj",
-                 hud=False):
+                 hud=False,
+                 frameskip=4,
+                 repeat_action_probability=0.0):
         self.env_name = env_name
         self.render_mode = render_mode
         self.obs_mode = obs_mode
         self.hud = hud
+        self.frameskip = frameskip
+        self.repeat_action_probability = repeat_action_probability
         self.env = None
         self.init()
     
@@ -42,7 +51,9 @@ class PongOCAtariTracedEnv:
         self.env = OCAtari(self.env_name, 
                            render_mode=self.render_mode, 
                            obs_mode=self.obs_mode, 
-                           hud=self.hud)
+                           hud=self.hud,
+                           frameskip=self.frameskip,
+                           repeat_action_probability=self.repeat_action_probability)
         self.obs, _ = self.env.reset()
     
     def close(self):
@@ -125,7 +136,7 @@ class Policy(Module):
             float: The predicted y-coordinate where the ball will reach the player's side
         """
         if 'Ball' in obs:
-                return obs['Ball'].get("y", None)
+            return obs['Ball'].get("y", None)
         return None
     
     @bundle(trainable=True)
@@ -142,32 +153,10 @@ class Policy(Module):
             int: 0 for NOOP, 2 for DOWN, 3 for UP
         '''
 
-        if predicted_ball_y is not None and "Player" in obs:
-            player_y = obs["Player"].get("y", None)
-            player_height = obs["Player"].get("h", None)
-
-            if player_y is not None and player_height is not None:
-                player_center = player_y + player_height / 2
-                
-                # Increase tolerance for more stable movement
-                center_tolerance = 10  # Central deadzone
-                edge_tolerance = 5     # Additional tolerance near paddle edges
-                
-                # Calculate distance to predicted position
-                distance = predicted_ball_y - player_center
-                
-                # Add extra tolerance near the edges of the paddle
-                if abs(distance) <= center_tolerance:
-                    return 0  # Stay still if ball is roughly centered
-                elif abs(distance) <= player_height/2 + edge_tolerance:
-                    # If we're close to intercepting with the paddle edge, don't move
-                    return 0
-                elif distance > 0:
-                    return 3  # UP
-                else:
-                    return 2  # DOWN
+        if predicted_ball_y is not None and 'Player' in obs:
+            return random.choice([2, 3])
         return 0
-        
+            
 
 
 def rollout(env, horizon, policy):
@@ -205,9 +194,15 @@ def rollout(env, horizon, policy):
     
     return trajectory, error
 
-def test_policy(policy, num_episodes=10, steps_per_episode=4000):
+def test_policy(policy, 
+                num_episodes=10, 
+                steps_per_episode=4000,
+                frameskip=1,
+                repeat_action_probability=0.0):
     logger.info("Evaluating policy")
-    env = PongOCAtariTracedEnv(render_mode=None)
+    env = PongOCAtariTracedEnv(render_mode=None,
+                               frameskip=frameskip,
+                               repeat_action_probability=repeat_action_probability)
     rewards = []
     
     for episode in range(num_episodes):
@@ -230,14 +225,18 @@ def test_policy(policy, num_episodes=10, steps_per_episode=4000):
     return mean_reward, std_reward
 
 def optimize_policy(
-    env_name="ALE/Pong-v5",
+    env_name="PongNoFrameskip-v4",
     horizon=2000,
     memory_size=5,
     n_optimization_steps=10,
     verbose=False,
-    model="gpt-4o-mini"
+    frame_skip=1,
+    sticky_action_p=0.00,
+    logger=None,
+    # model="gpt-4o-mini"
 ):
-    
+    if logger is None:
+        logger = logging.getLogger(__name__)
     
     # Get the config file path from environment variable
     # config_path = os.getenv("OAI_CONFIG_LIST")
@@ -246,12 +245,16 @@ def optimize_policy(
     # optimizer = OptoPrime(policy.parameters(), config_list=config_list, memory_size=memory_size)
 
     policy = Policy()
-
     optimizer = OptoPrime(policy.parameters(), memory_size=memory_size)
-    
-    env = PongOCAtariTracedEnv(env_name=env_name)
+    env = PongOCAtariTracedEnv(env_name=env_name,
+                               frameskip=frame_skip,
+                               repeat_action_probability=sticky_action_p)
+    perf_csv_filename = log_dir / f"perf_{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.csv"
+    trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}"
+    trace_ckpt_dir.mkdir(exist_ok=True)
     try:
         rewards = []
+        optimization_data = []
         logger.info("Optimization Starts")
         for i in range(n_optimization_steps):
             env.init()
@@ -259,11 +262,13 @@ def optimize_policy(
 
             if error is None:
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
-                mean_rewards, std_rewards = test_policy(policy) # run the policy on 10 games of length 4000 steps each
+                mean_rewards, std_rewards = test_policy(policy,
+                                                        frameskip=frame_skip,
+                                                        repeat_action_probability=sticky_action_p) # run the policy on 10 games of length 4000 steps each
                 if mean_rewards >= 19:
                     feedback += f"\nGood job! You're close to winning the game!"
                 if mean_rewards > 0:
-                    feedback += f"\nKeep it up! You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev \{std_rewards} \
+                    feedback += f"\nKeep it up! You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev {std_rewards} \
                                  but you are still {21-mean_rewards} points from winning the game. \
                                  Try improving paddle positioning to prevent opponent scoring."
                 elif mean_rewards <= 0:
@@ -272,11 +277,19 @@ def optimize_policy(
                 target = traj['observations'][-1]
                 
                 rewards.append(sum(traj['rewards']))
+                optimization_data.append({
+                    "Optimization Step": i,
+                    "Mean Reward": mean_rewards,
+                    "Std Dev Reward": std_rewards
+                })
+                df = pd.DataFrame(optimization_data)
+                df.to_csv(perf_csv_filename, index=False)
             else:
                 feedback = error.exception_node.create_feedback()
                 target = error.exception_node
             
             logger.info(f"Iteration: {i}, Feedback: {feedback}, target: {target}, Parameter: {policy.parameters()}")
+            policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
 
             instruction = "In Pong, you control the right paddle and compete against the enemy on the left. "
             instruction += "The goal is to keep deflecting the ball away from your goal and into your enemy's goal to maximize your score and win the game by scoring close to 21 points. "
@@ -306,18 +319,21 @@ def optimize_policy(
     return rewards
 
 if __name__ == "__main__":
+    frame_skip = 1
+    sticky_action_p = 0.0
+    env_name = "PongNoFrameskip-v4"
+    horizon = 400
+    n_optimization_steps = 20
+    memory_size = 5
+
     # Set up logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(console_handler)
-
     # Set up file logging
-    log_dir = Path("logs")
-    log_dir.mkdir(exist_ok=True)
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_file = log_dir / f"pong_ai_OCAtari_{timestamp}.log"
+    log_file = log_dir / f"{env_name.replace('/', '_')}_OCAtari_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.log"
     
     file_handler = logging.FileHandler(log_file)
     file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
@@ -325,11 +341,15 @@ if __name__ == "__main__":
     
     logger.info("Starting Pong AI training...")
     rewards = optimize_policy(
-        env_name="ALE/Pong-v5",
-        horizon=400,
-        n_optimization_steps=20,
-        memory_size=5,
+        env_name=env_name,
+        horizon=horizon,
+        n_optimization_steps=n_optimization_steps,
+        memory_size=memory_size,
         verbose='output',
-        model="gpt-4o-mini"
+        frame_skip=frame_skip,
+        sticky_action_p=sticky_action_p,
+        logger=logger,
+        # model="gpt-4o-mini"
+
     )
     logger.info("Training completed.")
