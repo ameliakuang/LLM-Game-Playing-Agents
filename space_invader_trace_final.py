@@ -178,12 +178,12 @@ def optimize_policy(
         
         The policy processes the observation to detect the spaceship, enemy invaders, and enemy lasers.
         It then makes decisions based on the following heuristics:
+            - If spaceship_pos not detected, directly return 0 (NOOP)
             - If an enemy laser is detected within a certain horizontal margin of the spaceship, move right (action 2) to avoid it. If the spaceship can't move right (i.e. near the wall), move left
             - If no immediate laser threat exists and enemy invaders are present, compute the average x-position of invaders:
                 • If the spaceship is left of (average - chase_margin), move right (action 2).
                 • If the spaceship is right of (average + chase_margin), move left (action 3).
             - If neither condition is met, fire (action 1).
-        If the spaceship is not detected, the policy performs NOOP (action 0).
         
         Returns:
             action (int): The selected action among 0 (NOOP), 1 (FIRE), 2 (move RIGHT), 3 (move LEFT).
@@ -194,8 +194,10 @@ def optimize_policy(
 
         action = 0  # Default NOOP
         laser_margin = 5
-        chase_margin = 40
+        chase_margin = 60
         right_margin = 30
+        if not spaceship_pos:
+            return 0 
 
         return 0
 
