@@ -282,8 +282,22 @@ def optimize_policy(
                 mean_rewards, std_rewards = test_policy(policy,
                                                         frameskip=frame_skip,
                                                         repeat_action_probability=sticky_action_p) # run the policy on 10 games of length 4000 steps each
+                if mean_rewards >= 21:
+                    logger.info("Congratulations! You've achieved a perfect score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
+                    rewards.append(sum(traj['rewards']))
+                    optimization_data.append({
+                        "Optimization Step": i,
+                        "Mean Reward": mean_rewards,
+                        "Std Dev Reward": std_rewards
+                    })
+                    df = pd.DataFrame(optimization_data)
+                    df.to_csv(perf_csv_filename, index=False)
+                    policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
+                    break
                 if mean_rewards >= 19:
-                    feedback += f"\nGood job! You're close to winning the game!"
+                    feedback += (f"\nGood job! You're close to winning the game! "
+                                 f"You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev {std_rewards}, "
+                                 f"only {21-mean_rewards} points short of winning.")
                 elif mean_rewards > 0:
                     feedback += (f"\nKeep it up! You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev {std_rewards} "
                                  f"but you are still {21-mean_rewards} points from winning the game. "
