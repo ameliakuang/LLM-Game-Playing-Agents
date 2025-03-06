@@ -12,7 +12,7 @@ import random
 
 from dotenv import load_dotenv
 from autogen import config_list_from_json
-import gymnasium as gym
+import gymnasium as gym 
 import opto.trace as trace
 from opto.trace import bundle, node, Module, GRAPH
 from opto.optimizers import OptoPrime
@@ -20,7 +20,7 @@ from opto.trace.bundle import ExceptionNode
 from opto.trace.errors import ExecutionError
 from ocatari.core import OCAtari
 
-load_dotenv()
+load_dotenv(override=True)
 gym.register_envs(ale_py)
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 log_dir = Path("logs")
@@ -30,7 +30,7 @@ base_trace_ckpt_dir.mkdir(exist_ok=True)
 
 class PongOCAtariTracedEnv:
     def __init__(self, 
-                 env_name="ALE/Pong-v5",
+                 env_name="PongNoFrameskip-v4",
                  render_mode="human",
                  obs_mode="obj",
                  hud=False,
@@ -125,15 +125,25 @@ class Policy(Module):
     @bundle(trainable=True)
     def predict_ball_trajectory(self, obs):
         """
-        Given current observation, compute the velocity of the ball and predict the y coordinate of the ball when it reaches the player's paddle.
-        Take into account the fact that the ball would bounce and wrap around top and bottom boundary in the game screen, 
-        use the ball movement trace to infer where the top (around 30) and bottom boundary (around 180) locates in the screen.
-        
+        Predict the y-coordinate where the ball will intersect with the player's paddle by calculating its trajectory,
+        using ball's (x, y) and (dx, dy) and accounting for bounces off the top and bottom walls.
+
+        Game Setup:
+        - Screen dimensions: The game screen has boundaries where the ball bounces
+          - Top boundary: approximately y=30
+          - Bottom boundary: approximately y=190
+        - Paddle positions:
+          - Player paddle: right side of screen (x = 140)
+          - Enemy paddle: left side of screen (x = 16)
+
         Args:
-            obs (dict): Dictionary of current game state, mapping keys ("Player", "Ball", "Enemy") to values (dictionary of keys ('x', 'y', 'w', 'h', 'dx', 'dy') to integer values)
-            
+            obs (dict): Dictionary containing object states for "Player", "Ball", and "Enemy".
+                       Each object has position (x,y), size (w,h), and velocity (dx,dy).
+
         Returns:
-            float: The predicted y-coordinate where the ball will reach the player's side
+            float: Predicted y-coordinate where the ball will intersect the player's paddle plane.
+                  Returns None if ball position cannot be determined.
+
         """
         if 'Ball' in obs:
             return obs['Ball'].get("y", None)
@@ -142,8 +152,15 @@ class Policy(Module):
     @bundle(trainable=True)
     def select_action(self, predicted_ball_y, obs):
         '''
-        Select the optimal action of the player paddle comparing current player position and predicted ball y coordinate.
-        If the player paddle is around the predicted ball y coordinate (taking into account the edges of paddle), return NOOP. Otherwise, move the paddle UP or DOWN to predicted ball y coordinate.
+        Select the optimal action to move player paddle by comparing current player position and predicted_ball_y.
+        
+        IMPORTANT! Movement Logic:
+        - If the player paddle's y position is GREATER than predicted_ball_y: Move DOWN (action 2)
+          (because the paddle needs to move downward to meet the ball)
+        - If the player paddle's y position is LESS than predicted_ball_y: Move UP (action 3)
+          (because the paddle needs to move upward to meet the ball)
+        - If the player paddle is already aligned with predicted_ball_y: NOOP (action 0)
+          (to stabilize the paddle when it's in position)
         Ensure stable movement to avoid missing the ball when close by.
 
         Args:
@@ -230,7 +247,7 @@ def optimize_policy(
     memory_size=5,
     n_optimization_steps=10,
     verbose=False,
-    frame_skip=1,
+    frame_skip=4,
     sticky_action_p=0.00,
     logger=None,
     # model="gpt-4o-mini"
@@ -267,13 +284,13 @@ def optimize_policy(
                                                         repeat_action_probability=sticky_action_p) # run the policy on 10 games of length 4000 steps each
                 if mean_rewards >= 19:
                     feedback += f"\nGood job! You're close to winning the game!"
-                if mean_rewards > 0:
-                    feedback += f"\nKeep it up! You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev {std_rewards} \
-                                 but you are still {21-mean_rewards} points from winning the game. \
-                                 Try improving paddle positioning to prevent opponent scoring."
+                elif mean_rewards > 0:
+                    feedback += (f"\nKeep it up! You're scoring {mean_rewards} points against the opponent on average of 10 games with std dev {std_rewards} "
+                                 f"but you are still {21-mean_rewards} points from winning the game. "
+                                 f"Try improving paddle positioning to prevent opponent scoring.")
                 elif mean_rewards <= 0:
-                    feedback += f"\nYour score is {mean_rewards} points on average of 10 games with std dev {std_rewards}. \
-                                  Try to improve paddle positioning to prevent opponent scoring."
+                    feedback += (f"\nYour score is {mean_rewards} points on average of 10 games with std dev {std_rewards}. "
+                                 f"Try to improve paddle positioning to prevent opponent scoring.")
                 target = traj['observations'][-1]
                 
                 rewards.append(sum(traj['rewards']))
@@ -288,7 +305,7 @@ def optimize_policy(
                 feedback = error.exception_node.create_feedback()
                 target = error.exception_node
             
-            logger.info(f"Iteration: {i}, Feedback: {feedback}, target: {target}, Parameter: {policy.parameters()}")
+            logger.info(f"Iteration: {i}, Feedback: {feedback}, target: {target}")
             policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
 
             instruction = "In Pong, you control the right paddle and compete against the enemy on the left. "
@@ -310,7 +327,7 @@ def optimize_policy(
                 if llm_output:
                     logger.info(f"LLM response:\n {llm_output}")
             
-            logger.info(f"Iteration: {i}, Feedback: {feedback}, Parameter: {policy.parameters()}")
+            logger.info(f"Iteration: {i}, Feedback: {feedback}")
     finally:
         if env is not None:
             env.close()
@@ -319,7 +336,7 @@ def optimize_policy(
     return rewards
 
 if __name__ == "__main__":
-    frame_skip = 1
+    frame_skip = 4
     sticky_action_p = 0.0
     env_name = "PongNoFrameskip-v4"
     horizon = 400

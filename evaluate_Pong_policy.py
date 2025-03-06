@@ -37,10 +37,10 @@ if __name__ == "__main__":
                                env_name="PongNoFrameskip-v4",
                                obs_mode="obj",
                                hud=False,
-                               frameskip=1,
+                               frameskip=4,
                                repeat_action_probability=0.00) # No rendering
     policy = Policy()
-    policy_ckpt = "/Users/ameliakuang/Repos/cs224n_llm_agent/trace_ckpt/PongNoFrameskip-v4_20250304_210803_skip1_sticky0.0_horizon400_optimSteps20_mem5/4.pkl"
+    policy_ckpt = "/Users/ameliakuang/Repos/cs224n_llm_agent/trace_ckpt/PongNoFrameskip-v4_20250305_204211_skip4_sticky0.0_horizon400_optimSteps20_mem5/8.pkl"
     policy.load(policy_ckpt)
     for p in policy.parameters():
         print(p.name, p.data)
