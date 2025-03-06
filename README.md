@@ -1,10 +1,10 @@
 # cs224n_LLM_agent
 
-This repository contains the code for the Pong AI that uses Large Language Models (LLMs) as the policy and value function. The code is written in Python and uses the Trace (OptoPrime) library for optimization.
+This repository contains code that uses Trace LLM optimizers (OptoPrime) to optimize python policies to play Atari games.
 
-**Setup**
+## Setup
 
-1. Create a `.env` file in the root directory of the repository with the following environment variables set:
+Create a `.env` file in the root directory of the repository with the following environment variables set:
 ```
 TRACE_CUSTOMLLM_MODEL=xxxxx
 TRACE_CUSTOMLLM_URL=xxxxx
@@ -12,8 +12,11 @@ TRACE_CUSTOMLLM_API_KEY=xxxxx
 TRACE_DEFAULT_LLM_BACKEND=xxxxx
 ```
 
-**Main Files**
+## Pong AI
 
-* `simple_pong_ai.py`: A simple rule-based Pong AI agent
-* `pong_LLM_agent.py`: The main script for training and evaluating the Pong AI using Gymnasium API and OptoPrime
-* `pong_ocatari_LLM_agent.py`: The main script for training and evaluating the Pong AI using OCAtari API and OptoPrime
+* `pong_ocatari_LLM_agent.py`: Primary script for training and evaluating the Pong AI with OCAtari API for environment interaction and Trace LLM optimizers for optimizing the policy.
+* `evaluate_Pong_policy.py`: This script is used to load checkpoints and evaluate the performance of the trained Pong AI policy.
+
+**Additional Scripts**
+* `pong_LLM_agent.py`: Initial script for training and evaluating the Pong AI using the Gymnasium API alongside Trace LLM optimizers.
+* `simple_pong_ai.py`: Implements a basic rule-based Pong AI agent as a simple baseline.
