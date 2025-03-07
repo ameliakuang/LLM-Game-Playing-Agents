@@ -5,9 +5,17 @@ __pycache__/
 
 # API key files
 OAI_CONFIG.json
+OAI_CONFIG_LIST.json
 
 # C extensions
 *.so
+
+# Data files
+*.csv
+*.numbers
+
+# Trace parameter checkpoints
+*.pkl
 
 # Distribution / packaging
 .Python
@@ -175,3 +183,5 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+*.DS_Store
