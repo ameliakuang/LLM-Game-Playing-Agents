@@ -33,14 +33,14 @@ def test_policy(env, policy, num_episodes=10, steps_per_episode=4000):
     return mean_reward, std_reward
 
 if __name__ == "__main__":
-    env = PongOCAtariTracedEnv(render_mode=None,
+    env = PongOCAtariTracedEnv(render_mode=None,  # No rendering
                                env_name="PongNoFrameskip-v4",
                                obs_mode="obj",
                                hud=False,
                                frameskip=4,
-                               repeat_action_probability=0.00) # No rendering
+                               repeat_action_probability=0.00)
     policy = Policy()
-    policy_ckpt = "/Users/ameliakuang/Repos/cs224n_llm_agent/trace_ckpt/PongNoFrameskip-v4_20250305_204211_skip4_sticky0.0_horizon400_optimSteps20_mem5/8.pkl"
+    policy_ckpt = "trace_ckpt/PongNoFrameskip-v4_20250305_204211_skip4_sticky0.0_horizon400_optimSteps20_mem5/8.pkl"
     policy.load(policy_ckpt)
     for p in policy.parameters():
         print(p.name, p.data)
