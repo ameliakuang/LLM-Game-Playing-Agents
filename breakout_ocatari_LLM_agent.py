@@ -23,7 +23,7 @@ from opto.trace import bundle, node, Module, GRAPH
 from opto.optimizers import OptoPrime
 from opto.trace.bundle import ExceptionNode
 from opto.trace.errors import ExecutionError
-from OC_Atari.ocatari.core import OCAtari
+from ocatari.core import OCAtari
 
 load_dotenv(override=True)
 gym.register_envs(ale_py)
@@ -64,9 +64,7 @@ class BreakoutOCAtariTracedEnv:
                     obs_mode=self.obs_mode, 
                     hud=self.hud,
                     frameskip=self.frameskip,
-                    repeat_action_probability=self.repeat_action_probability,
-                    episodicLifeEnv=False,
-                    fireResetEnv=False)
+                    repeat_action_probability=self.repeat_action_probability)
         self.obs, _ = self.env.reset()
         self.current_lives = self.env._env.unwrapped.ale.lives()
 
@@ -82,32 +80,29 @@ class BreakoutOCAtariTracedEnv:
 
     def extract_game_state(self, objects, rgb, info):
         obs = dict()
+        color_blocks = {
+            "Red": [], "Orange": [], "Yellow": [],
+            "Green": [], "Aqua": [], "Blue": []
+        }
         for object in objects:
             if object.category == "NoObject":
                 continue
             elif object.category == "Block":
-                if object.y == 57:
-                    color = "Red"
-                elif object.y == 63:
-                    color = "Orange"
-                elif object.y == 69:
-                    color = "Yellow"
-                elif object.y == 75:
-                    color = "Green"
-                elif object.y == 81:
-                    color = "Aqua"
-                elif object.y == 87:
-                    color = "Blue"
-                else:
-                    color = "Unknown"
-                obs[f"{color}Block"] = {
+                color = None
+                if object.y == 57: color = "Red"
+                elif object.y == 63: color = "Orange"
+                elif object.y == 69: color = "Yellow"
+                elif object.y == 75: color = "Green"
+                elif object.y == 81: color = "Aqua"
+                elif object.y == 87: color = "Blue"
+                else: continue  # Skip unknown y-positions
+            
+                color_blocks[color].append({
                     "x": object.x,
                     "y": object.y,
                     "w": object.w,
                     "h": object.h,
-                    "dx": object.dx,
-                    "dy": object.dy,
-                }
+                })
             else:
                 obs[object.category] = {"x": object.x,
                                         "y": object.y,
@@ -115,6 +110,9 @@ class BreakoutOCAtariTracedEnv:
                                         "h": object.h,
                                         "dx": object.dx,
                                         "dy": object.dy,}
+        for color, blocks in color_blocks.items():
+            if blocks:
+                obs[f"{color}Blocks"] = blocks
         if info:
             obs['lives'] = info.get('lives', None)
         return obs
@@ -176,21 +174,21 @@ class Policy(Module):
     def predict_ball_trajectory(self, obs):
         """
         Predict the x-coordinate where the ball will intersect with the player's paddle by calculating its trajectory,
-        using ball's (x, y) and (dx, dy) and accounting for bounces off the right and left walls and top brick block.
+        using ball's (x, y) and (dx, dy) and accounting for bounces off the right and left walls and brick blocks.
 
         Game setup:
-        - Screen dimensions: The game screen has left and right walls and top brick wall where the ball bounces 
+        - Screen dimensions: The game screen has left and right walls and brick wall where the ball bounces 
           - Left wall: x=9
           - Right wall: x=152
-          - Top brick block: y=obs['Block'].get('y', 87) if 'Block' in obs
+          - brick wall: ['{color}Block'][0]["y"] where color from top to bottom is Red(7pts)/Orange(7)/Yellow(4)/Green(4)/Aqua(1)/Blue(1)
         - Paddle positions:
           - Player paddle: bottom of screen (y=189)
         - Ball speed:
-          - Hitting higher bricks would deflect the ball faster
+          - Ball deflects from higher-scoring bricks would have a higher speed and is harder to catch.
         - The paddle would deflect the ball at different angles depending on where the ball lands on the paddle
         
         Args:
-            obs (dict): Dictionary containing object states for "Player", "Ball", and "Block".
+            obs (dict): Dictionary containing object states for "Player", "Ball", and "{color}Block".
                        Each object has position (x,y), size (w,h), and velocity (dx,dy).
         Returns:
             float: Predicted x-coordinate where the ball will intersect the player's paddle plane.
@@ -204,17 +202,17 @@ class Policy(Module):
     def generate_paddle_target(self, predicted_ball_x, obs):
         """
         Calculate the optimal x coordinate to move the paddle to catch the ball (at predicted_ball_x)
-        and deflect the ball to hit more bricks in the brick block.
+        and deflect the ball to hit bricks with higher scores in the brick wall.
 
         Logic:
-        - Adaptively balances between returning the ball and aiming to hit the brick block
-        - Prioritize returning the ball when ball is closer (has larger y-coordinate)
-        - Hitting higher bricks (y > 87) would yield higher rewards but also deflect the ball with a faster speed and makes it harder for the paddle to catch the ball,
-        taking into account ball velocity to prioritize safely returning the ball when ball velocity is high
+        - Prioritize returning the ball when the ball is closer (larger y-coordinate) and coming down (positive dy)
+        - Given the observation of blocks of different colors, try to return the ball in such a way that breaks through a tunnel in the brick wall, so the ball can then bounce around at the top of the brick walls to hit many bricks and score more points
+        - Adaptively balance between safely returning the ball and aiming to hit the higher-scoring bricks in the brick block
+        - Ball deflects from higher-scoring bricks would have a higher speed and is harder to catch
 
         Args:
             predicted_ball_x (float): predicted x coordinate of the ball intersecting with the paddle or None
-            obs (dict): Dictionary containing object states for "Player", "Ball", and "Block".
+            obs (dict): Dictionary containing object states for "Player", "Ball", and "{color}Block" where color is Red(7pts)/Orange(7)/Yellow(4)/Green(4)/Aqua(1)/Blue(1).
                        Each object has position (x,y), size (w,h), and velocity (dx,dy).
         Returns:
             float: Predicted x-coordinate to move the paddle to. 
@@ -222,15 +220,7 @@ class Policy(Module):
         """
         if predicted_ball_x is None:
             return None
-    
-        if "Block" in obs and 'Ball' in obs:
-            ball_y = obs['Ball'].get("y", None)
-            target_for_brick = obs['Block'].get("x", None) + obs['Block'].get("w", None)/2
-            if ball_y > 170:
-                target_pos = predicted_ball_x
-            else:
-                target_pos = predicted_ball_x * 0.6 + target_for_brick * 0.4
-            return target_pos
+
         return None
         
 
@@ -394,10 +384,10 @@ def optimize_policy(
                 if mean_rewards >= 300:
                     feedback += (f"\nGood job! You're close to winning the game! "
                                  f"You're scoring {mean_rewards} points against the opponent on average of {num_episodes} games with std dev {std_rewards}, "
-                                 f"only {300-mean_rewards} points short of winning.")
+                                 f"only {350-mean_rewards} points short of winning.")
                 elif mean_rewards > 0:
                     feedback += (f"\nKeep it up! You're scoring {mean_rewards} points on average of {num_episodes} games with std dev {std_rewards} "
-                                 f"but you are still {300-mean_rewards} points from winning the game. "
+                                 f"but you are still {350-mean_rewards} points from winning the game. "
                                  f"Try improving paddle positioning to hit more bricks and lose less lives.")
                 elif mean_rewards <= 0:
                     feedback += (f"\nYour score is {mean_rewards} points on average of {num_episodes} games with std dev {std_rewards}. "
@@ -454,7 +444,7 @@ if __name__ == "__main__":
     frame_skip = 4
     sticky_action_p = 0.0
     env_name = "BreakoutNoFrameskip-v4"
-    horizon = 500
+    horizon = 400
     n_optimization_steps = 50
     memory_size = 5
     policy_ckpt = None
