@@ -280,6 +280,7 @@ def optimize_policy(
             if error is None:
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
                 mean_rewards, std_rewards = test_policy(policy,
+                                                        num_episodes=1,
                                                         frameskip=frame_skip,
                                                         repeat_action_probability=sticky_action_p) # run the policy on 10 games of length 4000 steps each
                 if mean_rewards >= 21:
