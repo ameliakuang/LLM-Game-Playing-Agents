@@ -752,6 +752,7 @@ def optimize_policy(
     vis_frequency=20,  # Save visualization every N steps
     create_gif=True,  # Create GIF instead of individual PNG files
     gif_fps=10,  # Frames per second for GIF
+    enable_rollback=False,  # Enable policy rollback on error (default: False)
 ):
     if logger is None:
         logger = logging.getLogger(__name__)
@@ -760,7 +761,7 @@ def optimize_policy(
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
         log_dir = Path("logs")
         log_dir.mkdir(exist_ok=True)
-        file_handler = logging.FileHandler(log_dir / f"{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.log")
+        file_handler = logging.FileHandler(log_dir / f"{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}_rollback{enable_rollback}.log")
         file_handler.setLevel(logging.INFO)
         formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
         file_handler.setFormatter(formatter)
@@ -811,10 +812,11 @@ def optimize_policy(
         print(f"GIF FPS: {gif_fps}")
     else:
         print(f"Visualization frequency: Every {vis_frequency} steps")
+    print(f"Policy rollback: {'Enabled' if enable_rollback else 'Disabled'}")
     print("="*50 + "\n")
     
-    perf_csv_filename = log_dir / f"perf_{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.csv"
-    trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}"
+    perf_csv_filename = log_dir / f"perf_{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}_rollback{enable_rollback}.csv"
+    trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}_rollback{enable_rollback}"
     trace_ckpt_dir.mkdir(exist_ok=True)
     
     # Create visualization directory for this run
@@ -937,7 +939,7 @@ def optimize_policy(
                         print(f"  Error occurred during rollout")
                         
                         # Try to roll back to previous iteration's policy if available
-                        if i > 0 and retry_count < max_retries - 1:
+                        if enable_rollback and i > 0 and retry_count < max_retries - 1:
                             prev_policy_path = os.path.join(trace_ckpt_dir, f"{i-1}.pkl")
                             if os.path.exists(prev_policy_path):
                                 print(f"  Attempting to roll back to previous iteration's policy (retry {retry_count+1}/{max_retries-1})...")
@@ -963,7 +965,7 @@ def optimize_policy(
                     print(f"  Error during iteration {i}, retry {retry_count}: {str(e)[:100]}...")
                     
                     # Try to roll back to previous iteration's policy if available
-                    if i > 0 and retry_count < max_retries - 1:
+                    if enable_rollback and i > 0 and retry_count < max_retries - 1:
                         prev_policy_path = os.path.join(trace_ckpt_dir, f"{i-1}.pkl")
                         if os.path.exists(prev_policy_path):
                             print(f"  Attempting to roll back to previous iteration's policy (retry {retry_count+1}/{max_retries-1})...")
@@ -999,7 +1001,7 @@ def optimize_policy(
             instruction += "The policy should decide when to shoot and how to move to maximize score while avoiding enemy fire. "
             instruction += "There are shields that absorb both player and alien projectiles. "
             instruction += "Analyze the trace to figure out how to improve your strategy for shooting aliens and dodging projectiles."
-            instruction += "When you generate code, don't include any backslashes in your response. Also keep the function comments and docstrings as they are."
+            instruction += "When you generate code, don't write any thing like '\\\\n' in your response. Also keep the function comments and docstrings as they are."
             
             optimizer.objective = optimizer.default_objective + instruction 
             
@@ -1071,6 +1073,7 @@ if __name__ == "__main__":
     parser.add_argument("--vis-frequency", type=int, default=1, help="Save visualization every N steps")
     parser.add_argument("--no-gif", action="store_true", help="Disable GIF creation (save individual PNGs instead)")
     parser.add_argument("--gif-fps", type=int, default=10, help="Frames per second for GIF")
+    parser.add_argument("--enable-rollback", action="store_true", help="Enable policy rollback on error")
     
     args = parser.parse_args()
     
@@ -1079,7 +1082,7 @@ if __name__ == "__main__":
     log_dir = Path("logs")
     log_dir.mkdir(exist_ok=True)
     
-    log_file = log_dir / f"{args.env.replace('/', '_')}_{timestamp}_skip{args.frameskip}_sticky{args.sticky}_horizon{args.horizon}_optimSteps{args.steps}_mem{args.memory}.log"
+    log_file = log_dir / f"{args.env.replace('/', '_')}_{timestamp}_skip{args.frameskip}_sticky{args.sticky}_horizon{args.horizon}_optimSteps{args.steps}_mem{args.memory}_rollback{args.enable_rollback}.log"
     
     # Configure logging to file
     logging.basicConfig(
@@ -1109,6 +1112,7 @@ if __name__ == "__main__":
             vis_frequency=args.vis_frequency,
             create_gif=not args.no_gif,
             gif_fps=args.gif_fps,
+            enable_rollback=args.enable_rollback,
         )
         
         # Show paths to debug files if requested

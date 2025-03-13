@@ -181,7 +181,10 @@ class Policy(Module):
         Returns:
             bool: Whether to shoot
         '''
-        return random.choice([True, False])
+
+        Player = obs['Player']
+
+        return random.random() < 0.3
         
     @bundle(trainable=True)
     def decide_movement(self, obs):
@@ -209,9 +212,11 @@ class Policy(Module):
         '''
         # Default movement is no movement
         movement = {
-            'horizontal': 0,  # -1: left, 0: none, 1: right
-            'vertical': 0,    # -1: down, 0: none, 1: up
+            'horizontal': random.choice([-1, 0, 1]),  # -1: left, 0: none, 1: right
+            'vertical': random.choice([-1, 0, 1]),    # -1: down, 0: none, 1: up
         }
+
+        Player = obs['Player']
         
         return movement
     
