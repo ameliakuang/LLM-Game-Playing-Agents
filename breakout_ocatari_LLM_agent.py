@@ -429,7 +429,7 @@ def optimize_policy(
                 recent_mean_rewards.append(mean_rewards)
                 if len(recent_mean_rewards) > 5:
                     recent_mean_rewards.pop(0)
-                if mean_rewards >= 350:
+                if mean_rewards >= 400:
                     logger.info(f"Congratulations! You've achieved a perfect score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
                     rewards.append(sum(traj['rewards']))
                     optimization_data.append({
@@ -441,13 +441,14 @@ def optimize_policy(
                     df.to_csv(perf_csv_filename, index=False)
                     policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
                     break
-                if mean_rewards >= 300:
+                if mean_rewards >= 380:
                     feedback += (f"\nGood job! You're close to winning the game! "
                                  f"You're scoring {mean_rewards} points against the opponent on average of {num_episodes} games with std dev {std_rewards}, "
-                                 f"only {350-mean_rewards} points short of winning.")
+                                 f"try ensuring you return the ball, "
+                                 f"only {400-mean_rewards} points short of winning.")
                 elif mean_rewards > 0:
                     feedback += (f"\nKeep it up! You're scoring {mean_rewards} points on average of {num_episodes} games with std dev {std_rewards} "
-                                 f"but you are still {350-mean_rewards} points from winning the game. "
+                                 f"but you are still {400-mean_rewards} points from winning the game. "
                                  f"Try improving paddle positioning to return the ball and avoid losing lives.")
                 elif mean_rewards <= 0:
                     feedback += (f"\nYour score is {mean_rewards} points on average of {num_episodes} games with std dev {std_rewards}. "
@@ -484,7 +485,7 @@ def optimize_policy(
             instruction += "The brick wall consists of six rows of different colored bricks, each worth different points when hit: "
             instruction += "Red: top row, 7 pts; Orange: 2nd row: 7 pts, Yellow: 3rd row: 4 pts, Green: 4th row: 4 pts, Aqua: 5th row: 1 pt, Blue: 6th row: 1pt. "
             instruction += "Hitting higher bricks would deflect the ball faster and make catching the ball harder. "
-            instruction += "You will win the game when you score >= 350 points. "
+            instruction += "You will win the game when you score >= 400 points. "
             instruction += "You lose a life when you fail to catch the ball and the ball moves below the paddle. The game ends when you lose 5 lives. "
             instruction += "Analyze the trace to figure out the reason why you lose the game and optimize the code to score higher points by prioritizing hitting higher-value bricks when possible while maintaining ball control."
             optimizer.objective = optimizer.default_objective + instruction 
@@ -510,7 +511,7 @@ def optimize_policy(
                 policy.load(ckpt_path)
 
             # Check if the performance has dropped significantly in the recent 5 iterations
-            if best_iter and i > best_iter + 5 and np.mean(recent_mean_rewards) < 0.8 * best_mean_reward:
+            if best_iter and i > best_iter + 5 and recent_mean_rewards[-1] < 0.8 * best_mean_reward:
                 logger.info("Performance has dropped significantly in the recent 5 iterations. Loading the best checkpoint so far.")
                 policy.load(best_ckpt)
     finally:
@@ -544,7 +545,7 @@ if __name__ == "__main__":
     console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(console_handler)
     # Set up file logging
-    log_file = log_dir / f"{env_name.replace('/', '_')}_OCAtari_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}_initPolicy{initial_policy==None}.log"
+    log_file = log_dir / f"{env_name.replace('/', '_')}_OCAtari_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}_initPolicy{initial_policy!=None}.log"
 
     file_handler = logging.FileHandler(log_file)
     file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
