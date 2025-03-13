@@ -6,6 +6,7 @@ __pycache__/
 # API key files
 OAI_CONFIG.json
 OAI_CONFIG_LIST.json
+OAI_CONFIG_LIST
 
 # C extensions
 *.so
@@ -185,3 +186,7 @@ cython_debug/
 .pypirc
 
 *.DS_Store
+
+results/
+trace_ckpt/
+visualizations/
