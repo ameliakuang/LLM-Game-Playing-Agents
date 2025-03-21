@@ -190,3 +190,4 @@ cython_debug/
 results/
 trace_ckpt/
 visualizations/
+my_gameplay/

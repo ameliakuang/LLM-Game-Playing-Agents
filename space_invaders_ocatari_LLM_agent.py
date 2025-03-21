@@ -450,6 +450,7 @@ def test_policy(policy,
     
     env = None
     rewards = []
+    total_steps = 0  # Track total steps across all episodes
     
     try:
         env = SpaceInvadersOCAtariTracedEnv(render_mode=None,
@@ -458,6 +459,7 @@ def test_policy(policy,
         
         for episode in range(num_episodes):
             episode_reward = 0
+            episode_steps = 0  # Track steps for this episode
             frames = [] if visualize and episode == 0 and create_gif else None
             
             try:
@@ -498,6 +500,7 @@ def test_policy(policy,
                         action = policy(obs)
                         obs, reward, terminated, truncated, _ = env.step(action)
                         episode_reward += reward
+                        episode_steps += 1  # Increment episode steps
                         
                         if terminated or truncated:
                             break
@@ -505,6 +508,8 @@ def test_policy(policy,
                         # Log error but continue with next episode
                         logging.warning(f"Error during test episode {episode} step: {str(e)}")
                         break
+                
+                total_steps += episode_steps  # Add episode steps to total
                 
                 # Create GIF for the first episode if requested
                 if visualize and episode == 0 and create_gif and frames and vis_dir:
@@ -557,7 +562,7 @@ def test_policy(policy,
         mean_reward = 0.0
         std_reward = 0.0
     
-    print(f" done. Mean: {mean_reward:.1f}, StdDev: {std_reward:.1f}")
+    print(f" done. Mean: {mean_reward:.1f}, StdDev: {std_reward:.1f}, Total Steps: {total_steps}")
     return mean_reward, std_reward
 
 def visualize_game_state(obs, step_num=None, save_path=None):
@@ -904,10 +909,10 @@ def optimize_policy(
                             policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
                             break
                             
-                        if mean_rewards >= 300:
+                        if mean_rewards >= 1000:
                             feedback += (f"\nGreat job! You're performing well with an average score of {mean_rewards} "
-                                        f"with std dev {std_rewards}. Try to improve your shooting accuracy and dodging.")
-                        elif mean_rewards >= 100:
+                                        f"with std dev {std_rewards}. Try to score more even more points.")
+                        elif mean_rewards >= 500:
                             feedback += (f"\nGood progress! Your average score is {mean_rewards} with std dev {std_rewards}. "
                                         f"Focus on better timing for shooting and avoiding enemy projectiles.")
                         else:

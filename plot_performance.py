@@ -9,6 +9,7 @@ sns.set(style="whitegrid")
 # Read the CSV files
 space_invaders_data = pd.read_csv('space_invaders_best_performance.csv')
 pong_data = pd.read_csv('pong_best_performance.csv')
+breakout_data = pd.read_csv('breakout_best_performance.csv')
 
 # Instead of adding 1 to the data, we'll set the ticks explicitly
 # Create separate plots for each game
@@ -48,4 +49,23 @@ plt.xticks(pong_data['Optimization Step'], x_ticks)
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
 plt.savefig('pong_performance.png', dpi=300, bbox_inches='tight')
+plt.close()
+
+# Plot Breakout data
+plt.figure(figsize=(8, 6))
+plt.plot(breakout_data['Optimization Step'], breakout_data['Mean Reward'], 
+         marker='o', linestyle='-', linewidth=2, markersize=8, color='#2ECC71')
+plt.fill_between(breakout_data['Optimization Step'],
+                breakout_data['Mean Reward'] - breakout_data['Std Dev Reward'],
+                breakout_data['Mean Reward'] + breakout_data['Std Dev Reward'],
+                alpha=0.2, color='#2ECC71')
+plt.title('Breakout Performance', fontsize=16)
+plt.xlabel('Optimization Step', fontsize=14)
+plt.ylabel('Mean Reward', fontsize=14)
+# Set x-ticks explicitly starting at 1
+x_ticks = np.arange(len(breakout_data)) + 1
+plt.xticks(breakout_data['Optimization Step'], x_ticks)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('breakout_performance.png', dpi=300, bbox_inches='tight')
 plt.close() 
