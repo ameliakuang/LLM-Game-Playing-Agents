@@ -7,9 +7,9 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # Set session information
-SESSION_ID = "20250323_112920"
-FRAME_NUM = 85
-GAME_TYPE = "pong"  # Can be "pong" or "space_invaders"
+SESSION_ID = "20250323_115142"
+FRAME_NUM = 46
+GAME_TYPE = "breakout"  # Can be "pong", "space_invaders", or "breakout"
 
 # Define paths for the session data
 def get_session_paths(session_id, frame_num):
@@ -110,6 +110,16 @@ class DraggableAnnotation:
         self.annotation.figure.canvas.mpl_disconnect(self.cidrelease)
         self.annotation.figure.canvas.mpl_disconnect(self.cidmotion)
 
+def get_block_color(y):
+    """Determine block color based on y-coordinate for Breakout."""
+    if y == 57: return (0/255, 0/255, 1.0)    # Blue
+    elif y == 63: return (0/255, 1.0, 1.0)    # Aqua
+    elif y == 69: return (0/255, 1.0, 0/255)  # Green
+    elif y == 75: return (1.0, 1.0, 0/255)    # Yellow
+    elif y == 81: return (1.0, 165/255, 0/255)  # Orange
+    elif y == 87: return (1.0, 0/255, 0/255)  # Red
+    else: return (1.0, 1.0, 1.0)              # Default white
+
 def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
     """Create a side-by-side plot with raw/vis frame and detailed data labels."""
     # Create figure and subplots
@@ -138,6 +148,13 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
             'Enemy': (0/255, 0/255, 1.0),     # Dark blue for enemy paddle
             'Ball': (0/255, 1.0, 1.0),        # Cyan for ball
         }
+    elif GAME_TYPE == "breakout":
+        objects_to_highlight = ['Player', 'Ball']  # We'll handle blocks separately
+        # Define colors for Breakout objects
+        colors = {
+            'Player': (0/255, 1.0, 0/255),    # Green for player paddle
+            'Ball': (0/255, 1.0, 1.0),        # Cyan for ball
+        }
     else:  # space_invaders
         objects_to_highlight = [
             'Player', 
@@ -158,8 +175,17 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
     
     # Add text labels for selected objects with detailed state data
     for key, obj in state_data.items():
-        # Skip if not a dictionary (like reward) or not in our highlight list
-        if not isinstance(obj, dict) or key not in objects_to_highlight:
+        # Skip if not a dictionary (like reward)
+        if not isinstance(obj, dict):
+            continue
+            
+        # For Breakout, handle blocks separately
+        if GAME_TYPE == "breakout" and key.startswith('Block'):
+            objects_to_highlight.append(key)
+            continue
+            
+        # Skip if not in our highlight list
+        if key not in objects_to_highlight:
             continue
             
         try:
@@ -171,9 +197,14 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
             dx = float(obj.get('dx', 0))
             dy = float(obj.get('dy', 0))
             
-            # Determine color based on object type
+            # Determine color based on game type and object
             if GAME_TYPE == "pong":
                 color = colors.get(key, (1.0, 1.0, 1.0))  # White for unknown objects
+            elif GAME_TYPE == "breakout":
+                if key.startswith('Block'):
+                    color = get_block_color(y)
+                else:
+                    color = colors.get(key, (1.0, 1.0, 1.0))
             else:
                 if key == 'Player':
                     color = colors['Player']
@@ -203,6 +234,19 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
                     # Position label above the ball
                     x_offset = 0
                     y_offset = -10
+            elif GAME_TYPE == "breakout":
+                if key == 'Player':
+                    # Position label to the right of the player paddle
+                    x_offset = w + 2
+                    y_offset = 0
+                elif key == 'Ball':
+                    # Position label above the ball
+                    x_offset = 0
+                    y_offset = -10
+                elif key.startswith('Block'):
+                    # For blocks, position label above them
+                    x_offset = 0
+                    y_offset = -5
             else:
                 # Space Invaders positioning logic
                 x_offset = w + 2
@@ -255,6 +299,59 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
             
         except (ValueError, TypeError) as e:
             print(f"Error annotating {key}: {e}")
+    
+    # Handle Breakout blocks separately
+    if GAME_TYPE == "breakout":
+        for key, obj in state_data.items():
+            if not isinstance(obj, dict) or not key.startswith('Block'):
+                continue
+                
+            try:
+                # Extract position and velocity data
+                x = float(obj.get('x', 0))
+                y = float(obj.get('y', 0))
+                w = float(obj.get('w', 5))
+                h = float(obj.get('h', 5))
+                dx = float(obj.get('dx', 0))
+                dy = float(obj.get('dy', 0))
+                
+                # Get color based on y-coordinate
+                color = get_block_color(y)
+                
+                # Create simplified state info label
+                state_text = f"pos=({int(x)},{int(y)})\nvel=({dx:.1f},{dy:.1f})"
+                
+                # Position label above the block
+                x_offset = 0
+                y_offset = -5
+                
+                # Add detailed label with position and velocity data
+                annotation = ax2.annotate(
+                    state_text,
+                    (x + x_offset, y + y_offset),
+                    color=color,
+                    fontsize=10,
+                    weight='bold',
+                    backgroundcolor='black',
+                    va='center',
+                    bbox=dict(boxstyle="round,pad=0.3", fc='black', ec=color, alpha=0.8)
+                )
+                
+                # Draw a line to connect the block to its label
+                line = ax2.plot(
+                    [x + w/2, x + x_offset - 2],
+                    [y + h/2, y + y_offset],
+                    color=color,
+                    linestyle='-',
+                    linewidth=1
+                )[0]
+                
+                # Make annotation draggable
+                draggable = DraggableAnnotation(annotation, line)
+                draggable_annotations.append(draggable)
+                
+            except (ValueError, TypeError) as e:
+                print(f"Error annotating {key}: {e}")
     
     # Adjust layout
     plt.tight_layout()

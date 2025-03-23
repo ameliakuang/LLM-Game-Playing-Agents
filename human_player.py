@@ -523,11 +523,158 @@ class PongHumanPlayer(AtariHumanPlayer):
         
         return canvas
 
+class BreakoutHumanPlayer(AtariHumanPlayer):
+    def __init__(self, **kwargs):
+        if 'env_name' not in kwargs:
+            kwargs['env_name'] = "BreakoutNoFrameskip-v4"
+        super().__init__(**kwargs)
+        
+        # Action mapping for Breakout
+        # 0: NOOP, 1: FIRE, 2: RIGHT, 3: LEFT
+        self.key_action_map = {
+            pygame.K_SPACE: 1,   # FIRE
+            pygame.K_RIGHT: 2,   # RIGHT
+            pygame.K_LEFT: 3,    # LEFT
+        }
+    
+    def get_game_title(self):
+        return "Breakout Human Player"
+    
+    def print_instructions(self):
+        """Print game instructions to the console."""
+        print("\n" + "="*50)
+        print("BREAKOUT HUMAN PLAYER")
+        print("="*50)
+        print("Controls:")
+        print("  LEFT ARROW: Move Paddle Left")
+        print("  RIGHT ARROW: Move Paddle Right")
+        print("  SPACE: Fire (Start Game)")
+        print("  ESC or Q: Quit")
+        print("="*50)
+        print(f"Saving raw frames to: {self.raw_frames_dir}")
+        print(f"Saving visualization frames to: {self.vis_frames_dir}")
+        print(f"Saving state data to: {self.states_dir}")
+        print("="*50 + "\n")
+    
+    def get_multiple_instance_categories(self):
+        # In Breakout, we have multiple blocks of different colors
+        return ["Block"]  # All blocks are labeled as "Block" in observations
+    
+    def get_action_from_keys(self):
+        """Get the current action based on keyboard input."""
+        keys = pygame.key.get_pressed()
+        
+        # Check for quit
+        if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
+            return -1  # Special value to indicate quit
+        
+        # Check for fire action
+        if keys[pygame.K_SPACE]:
+            return 1  # FIRE
+        
+        # Check for paddle movement
+        if keys[pygame.K_RIGHT]:
+            return 2  # RIGHT
+        elif keys[pygame.K_LEFT]:
+            return 3  # LEFT
+        
+        # Default - no action
+        return 0  # NOOP
+    
+    def get_block_color(self, y):
+        """Determine block color based on y-coordinate."""
+        if y == 57: return (255, 0, 0)      # Red
+        elif y == 63: return (255, 165, 0)  # Orange
+        elif y == 69: return (255, 255, 0)  # Yellow
+        elif y == 75: return (0, 255, 0)    # Green
+        elif y == 81: return (0, 255, 255)  # Aqua
+        elif y == 87: return (0, 0, 255)    # Blue
+        else: return (255, 255, 255)        # Default white
+    
+    def get_object_colors(self):
+        return {
+            'Player': (0, 255, 0),    # Green for player paddle
+            'Ball': (255, 255, 0),    # Yellow for ball
+            'Block': (255, 255, 255),  # Default white for blocks (will be overridden)
+        }
+    
+    def visualize_game_state(self, obs, step_num=None, save_path=None):
+        """
+        Visualize the game state from object observations.
+        """
+        # Create a blank canvas (black background)
+        canvas = np.zeros((210, 160, 3), dtype=np.uint8)
+        
+        # Draw objects
+        for key, obj in obs.items():
+            # Skip reward or non-dict objects
+            if key == 'reward' or not isinstance(obj, dict):
+                continue
+            
+            # Extract coordinates safely
+            try:
+                x = float(obj.get('x', 0))
+                y = float(obj.get('y', 0))
+                w = float(obj.get('w', 5))
+                h = float(obj.get('h', 5))
+                dx = float(obj.get('dx', 0))
+                dy = float(obj.get('dy', 0))
+            except (ValueError, TypeError):
+                continue
+            
+            # Get color for this object type
+            if key.startswith('Block'):
+                color = self.get_block_color(y)
+            else:
+                color = self.get_object_colors().get(key, (255, 255, 255))  # Default to white
+                
+            # Draw rectangle for the object
+            cv2.rectangle(canvas, (int(x), int(y)), (int(x+w), int(y+h)), color, 1)
+            
+            # Add label with adjusted position based on object type
+            if key == 'Player':
+                # Position label to the right of the player paddle
+                label_x = int(x + w + 2)
+                label_y = int(y - 5)
+            elif key == 'Ball':
+                # Position label above the ball
+                label_x = int(x)
+                label_y = int(y - 10)
+            elif key.startswith('Block'):
+                # For blocks, position label above them
+                label_x = int(x)
+                label_y = int(y - 5)
+            else:
+                # Default positioning
+                label_x = int(x)
+                label_y = int(y - 5)
+            
+            cv2.putText(canvas, key, (label_x, label_y), cv2.FONT_HERSHEY_SIMPLEX, 0.3, color, 1)
+        
+        # Add step number if provided
+        if step_num is not None:
+            cv2.putText(canvas, f"Step: {step_num}", (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        
+        # Add reward if available
+        if 'reward' in obs:
+            reward = obs['reward']
+            try:
+                if isinstance(reward, (int, float)) and not np.isnan(reward):
+                    cv2.putText(canvas, f"Reward: {reward}", (5, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+            except:
+                pass  # Skip if reward can't be displayed
+        
+        # Save if path is provided
+        if save_path:
+            cv2.imwrite(save_path, canvas)
+        
+        return canvas
+
 if __name__ == "__main__":
     import argparse
     
     parser = argparse.ArgumentParser(description="Human player for Atari games with frame and state capture")
-    parser.add_argument("--game", type=str, default="pong", choices=["space_invaders", "pong"], help="Game to play")
+    parser.add_argument("--game", type=str, default="pong", choices=["space_invaders", "pong", "breakout"], help="Game to play")
     parser.add_argument("--save_dir", type=str, default="my_gameplay", help="Directory to save frames and state data")
     parser.add_argument("--env_name", type=str, default=None, help="Environment name (will be set based on game)")
     parser.add_argument("--render_mode", type=str, default="human", help="Render mode (human, rgb_array)")
@@ -542,12 +689,24 @@ if __name__ == "__main__":
     if args.env_name is None:
         if args.game == "pong":
             args.env_name = "PongNoFrameskip-v4"
+        elif args.game == "breakout":
+            args.env_name = "BreakoutNoFrameskip-v4"
         else:  # space_invaders
             args.env_name = "SpaceInvadersNoFrameskip-v4"
     
     # Create appropriate player based on game
     if args.game == "pong":
         player = PongHumanPlayer(
+            save_dir=args.save_dir,
+            env_name=args.env_name,
+            render_mode="human",  # Override to always use human for main env
+            obs_mode=args.obs_mode,
+            hud=args.hud,
+            frameskip=args.frameskip,
+            repeat_action_probability=args.sticky_actions
+        )
+    elif args.game == "breakout":
+        player = BreakoutHumanPlayer(
             save_dir=args.save_dir,
             env_name=args.env_name,
             render_mode="human",  # Override to always use human for main env
