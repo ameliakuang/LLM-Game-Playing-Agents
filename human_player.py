@@ -18,14 +18,14 @@ load_dotenv()
 # Register Atari environments
 gym.register_envs(ale_py)
 
-class SpaceInvadersHumanPlayer:
+class AtariHumanPlayer:
     def __init__(self, 
                  save_dir=None,
-                 env_name="SpaceInvadersNoFrameskip-v4",
-                 render_mode="rgb_array",  # Changed default to rgb_array to get raw frames
+                 env_name=None,
+                 render_mode="rgb_array",
                  obs_mode="obj",
                  hud=True,
-                 frameskip=1,  # Use 1 for smoother human play
+                 frameskip=1,
                  repeat_action_probability=0.0):
         
         # Environment setup
@@ -56,7 +56,7 @@ class SpaceInvadersHumanPlayer:
         # Initialize pygame for keyboard input
         pygame.init()
         self.screen = pygame.display.set_mode((160, 210))
-        pygame.display.set_caption("Space Invaders Human Player")
+        pygame.display.set_caption(self.get_game_title())
         
         # Environment
         self.env = None
@@ -67,33 +67,16 @@ class SpaceInvadersHumanPlayer:
         # Initialize environment
         self.init_env()
         
-        # Action mapping for Space Invaders
-        # 0: NOOP, 1: FIRE, 2: RIGHT, 3: LEFT, 4: RIGHT+FIRE, 5: LEFT+FIRE
-        self.key_action_map = {
-            pygame.K_SPACE: 1,     # FIRE
-            pygame.K_RIGHT: 2,     # RIGHT
-            pygame.K_LEFT: 3,      # LEFT
-            # Combined actions will be handled in get_action_from_keys
-        }
-        
         # Print instructions
         self.print_instructions()
     
+    def get_game_title(self):
+        """Get the game title for the window caption."""
+        raise NotImplementedError
+    
     def print_instructions(self):
         """Print game instructions to the console."""
-        print("\n" + "="*50)
-        print("SPACE INVADERS HUMAN PLAYER")
-        print("="*50)
-        print("Controls:")
-        print("  LEFT ARROW: Move Left")
-        print("  RIGHT ARROW: Move Right")
-        print("  SPACE: Fire")
-        print("  ESC or Q: Quit")
-        print("="*50)
-        print(f"Saving raw frames to: {self.raw_frames_dir}")
-        print(f"Saving visualization frames to: {self.vis_frames_dir}")
-        print(f"Saving state data to: {self.states_dir}")
-        print("="*50 + "\n")
+        raise NotImplementedError
     
     def init_env(self):
         """Initialize the environment."""
@@ -110,7 +93,6 @@ class SpaceInvadersHumanPlayer:
                           repeat_action_probability=self.repeat_action_probability)
         
         # Create a secondary environment just for capturing raw frames
-        # This is a workaround since we need both human display and frame capture
         self.frame_env = OCAtari(self.env_name,
                                 render_mode="rgb_array",
                                 obs_mode=self.obs_mode,
@@ -138,8 +120,8 @@ class SpaceInvadersHumanPlayer:
             if category == "NoObject":
                 continue
 
-            # For aliens and other objects that might have multiple instances
-            if category in ["Alien", "Shield", "Bullet"]:
+            # For objects that might have multiple instances
+            if category in self.get_multiple_instance_categories():
                 if category not in category_counts:
                     category_counts[category] = 0
                 else:
@@ -151,36 +133,24 @@ class SpaceInvadersHumanPlayer:
                 key = category
                 
             obs[key] = {"x": obj.x,
-                        "y": obj.y,
-                        "w": obj.w,
-                        "h": obj.h,
-                        "dx": obj.dx,
-                        "dy": obj.dy,}
+                       "y": obj.y,
+                       "w": obj.w,
+                       "h": obj.h,
+                       "dx": obj.dx,
+                       "dy": obj.dy,}
         return obs
+    
+    def get_multiple_instance_categories(self):
+        """Get list of object categories that can have multiple instances."""
+        raise NotImplementedError
     
     def get_action_from_keys(self):
         """Get the current action based on keyboard input."""
-        keys = pygame.key.get_pressed()
-        
-        # Check for quit
-        if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
-            return -1  # Special value to indicate quit
-        
-        # Check for combined actions
-        if keys[pygame.K_SPACE] and keys[pygame.K_RIGHT]:
-            return 4  # RIGHT+FIRE
-        elif keys[pygame.K_SPACE] and keys[pygame.K_LEFT]:
-            return 5  # LEFT+FIRE
-        # Check for single actions
-        elif keys[pygame.K_SPACE]:
-            return 1  # FIRE
-        elif keys[pygame.K_RIGHT]:
-            return 2  # RIGHT
-        elif keys[pygame.K_LEFT]:
-            return 3  # LEFT
-        
-        # Default - no action
-        return 0  # NOOP
+        raise NotImplementedError
+    
+    def get_object_colors(self):
+        """Get color mapping for different object types."""
+        raise NotImplementedError
     
     def visualize_game_state(self, obs, step_num=None, save_path=None):
         """
@@ -206,25 +176,8 @@ class SpaceInvadersHumanPlayer:
             except (ValueError, TypeError):
                 continue
             
-            # Different colors for different object types
-            if key == 'Player':
-                color = (0, 255, 0)  # Green for player
-            elif key.startswith('Alien'):
-                color = (255, 0, 0)  # Red for aliens
-            elif key.startswith('Bullet'):
-                # Determine if it's a player bullet (moving up) or enemy bullet (moving down)
-                if dy < 0:  # Moving up (player bullet)
-                    color = (0, 255, 255)  # Cyan for player bullets
-                else:  # Moving down or stationary (enemy bullet)
-                    color = (255, 255, 0)  # Yellow for enemy bullets
-            elif key.startswith('Missile'):
-                color = (0, 255, 255)  # Cyan for player missiles
-            elif key.startswith('EnemyMissile'):
-                color = (255, 255, 0)  # Yellow for enemy missiles
-            elif key.startswith('Shield'):
-                color = (0, 0, 255)  # Blue for shields
-            else:
-                color = (255, 255, 255)  # White for other objects
+            # Get color for this object type
+            color = self.get_object_colors().get(key, (255, 255, 255))  # Default to white
                 
             # Draw rectangle for the object
             cv2.rectangle(canvas, (int(x), int(y)), (int(x+w), int(y+h)), color, 1)
@@ -381,12 +334,202 @@ class SpaceInvadersHumanPlayer:
             print(f"State data saved to: {self.states_dir}")
             print("="*50)
 
+class SpaceInvadersHumanPlayer(AtariHumanPlayer):
+    def __init__(self, **kwargs):
+        if 'env_name' not in kwargs:
+            kwargs['env_name'] = "SpaceInvadersNoFrameskip-v4"
+        super().__init__(**kwargs)
+        
+        # Action mapping for Space Invaders
+        # 0: NOOP, 1: FIRE, 2: RIGHT, 3: LEFT, 4: RIGHT+FIRE, 5: LEFT+FIRE
+        self.key_action_map = {
+            pygame.K_SPACE: 1,     # FIRE
+            pygame.K_RIGHT: 2,     # RIGHT
+            pygame.K_LEFT: 3,      # LEFT
+        }
+    
+    def get_game_title(self):
+        return "Space Invaders Human Player"
+    
+    def print_instructions(self):
+        """Print game instructions to the console."""
+        print("\n" + "="*50)
+        print("SPACE INVADERS HUMAN PLAYER")
+        print("="*50)
+        print("Controls:")
+        print("  LEFT ARROW: Move Left")
+        print("  RIGHT ARROW: Move Right")
+        print("  SPACE: Fire")
+        print("  ESC or Q: Quit")
+        print("="*50)
+        print(f"Saving raw frames to: {self.raw_frames_dir}")
+        print(f"Saving visualization frames to: {self.vis_frames_dir}")
+        print(f"Saving state data to: {self.states_dir}")
+        print("="*50 + "\n")
+    
+    def get_multiple_instance_categories(self):
+        return ["Alien", "Shield", "Bullet"]
+    
+    def get_action_from_keys(self):
+        """Get the current action based on keyboard input."""
+        keys = pygame.key.get_pressed()
+        
+        # Check for quit
+        if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
+            return -1  # Special value to indicate quit
+        
+        # Check for combined actions
+        if keys[pygame.K_SPACE] and keys[pygame.K_RIGHT]:
+            return 4  # RIGHT+FIRE
+        elif keys[pygame.K_SPACE] and keys[pygame.K_LEFT]:
+            return 5  # LEFT+FIRE
+        # Check for single actions
+        elif keys[pygame.K_SPACE]:
+            return 1  # FIRE
+        elif keys[pygame.K_RIGHT]:
+            return 2  # RIGHT
+        elif keys[pygame.K_LEFT]:
+            return 3  # LEFT
+        
+        # Default - no action
+        return 0  # NOOP
+    
+    def get_object_colors(self):
+        return {
+            'Player': (0, 255, 0),  # Green for player
+            'Alien': (255, 0, 0),   # Red for aliens
+            'Bullet': (0, 255, 255),  # Cyan for bullets
+            'Shield': (0, 0, 255),   # Blue for shields
+        }
+
+class PongHumanPlayer(AtariHumanPlayer):
+    def __init__(self, **kwargs):
+        if 'env_name' not in kwargs:
+            kwargs['env_name'] = "PongNoFrameskip-v4"
+        super().__init__(**kwargs)
+        
+        # Action mapping for Pong
+        # 0: NOOP, 2: DOWN, 3: UP
+        self.key_action_map = {
+            pygame.K_UP: 3,    # UP
+            pygame.K_DOWN: 2,  # DOWN
+        }
+    
+    def get_game_title(self):
+        return "Pong Human Player"
+    
+    def print_instructions(self):
+        """Print game instructions to the console."""
+        print("\n" + "="*50)
+        print("PONG HUMAN PLAYER")
+        print("="*50)
+        print("Controls:")
+        print("  UP ARROW: Move Paddle Up")
+        print("  DOWN ARROW: Move Paddle Down")
+        print("  ESC or Q: Quit")
+        print("="*50)
+        print(f"Saving raw frames to: {self.raw_frames_dir}")
+        print(f"Saving visualization frames to: {self.vis_frames_dir}")
+        print(f"Saving state data to: {self.states_dir}")
+        print("="*50 + "\n")
+    
+    def get_multiple_instance_categories(self):
+        # In Pong, we don't have multiple instances of any objects
+        return []
+    
+    def get_action_from_keys(self):
+        """Get the current action based on keyboard input."""
+        keys = pygame.key.get_pressed()
+        
+        # Check for quit
+        if keys[pygame.K_ESCAPE] or keys[pygame.K_q]:
+            return -1  # Special value to indicate quit
+        
+        # Check for paddle movement
+        if keys[pygame.K_UP]:
+            return 3  # UP
+        elif keys[pygame.K_DOWN]:
+            return 2  # DOWN
+        
+        # Default - no action
+        return 0  # NOOP
+    
+    def get_object_colors(self):
+        return {
+            'Player': (0, 255, 0),    # Green for player paddle
+            'Enemy': (255, 0, 0),     # Red for enemy paddle
+            'Ball': (255, 255, 0),    # Yellow for ball
+        }
+    
+    def visualize_game_state(self, obs, step_num=None, save_path=None):
+        """
+        Visualize the game state from object observations.
+        """
+        # Create a blank canvas (black background)
+        canvas = np.zeros((210, 160, 3), dtype=np.uint8)
+        
+        # Draw objects
+        for key, obj in obs.items():
+            # Skip reward or non-dict objects
+            if key == 'reward' or not isinstance(obj, dict):
+                continue
+            
+            # Extract coordinates safely
+            try:
+                x = float(obj.get('x', 0))
+                y = float(obj.get('y', 0))
+                w = float(obj.get('w', 5))
+                h = float(obj.get('h', 5))
+                dx = float(obj.get('dx', 0))
+                dy = float(obj.get('dy', 0))
+            except (ValueError, TypeError):
+                continue
+            
+            # Get color for this object type
+            color = self.get_object_colors().get(key, (255, 255, 255))  # Default to white
+                
+            # Draw rectangle for the object
+            cv2.rectangle(canvas, (int(x), int(y)), (int(x+w), int(y+h)), color, 1)
+            
+            # Add label with adjusted position based on object type
+            if key == 'Player':
+                # Position label to the right of the player paddle
+                label_x = int(x + w - 20)
+            elif key == 'Enemy':
+                # Position label to the left of the enemy paddle
+                label_x = int(x - 10)
+            else:
+                # For ball, position label above it
+                label_x = int(x)
+            
+            cv2.putText(canvas, key, (label_x, int(y-5)), cv2.FONT_HERSHEY_SIMPLEX, 0.3, color, 1)
+        
+        # Add step number if provided
+        if step_num is not None:
+            cv2.putText(canvas, f"Step: {step_num}", (5, 15), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        
+        # Add reward if available
+        if 'reward' in obs:
+            reward = obs['reward']
+            try:
+                if isinstance(reward, (int, float)) and not np.isnan(reward):
+                    cv2.putText(canvas, f"Reward: {reward}", (5, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+            except:
+                pass  # Skip if reward can't be displayed
+        
+        # Save if path is provided
+        if save_path:
+            cv2.imwrite(save_path, canvas)
+        
+        return canvas
+
 if __name__ == "__main__":
     import argparse
     
-    parser = argparse.ArgumentParser(description="Human player for Space Invaders with frame and state capture")
-    parser.add_argument("--save_dir", type=str, default="human_gameplay", help="Directory to save frames and state data")
-    parser.add_argument("--env_name", type=str, default="SpaceInvadersNoFrameskip-v4", help="Environment name")
+    parser = argparse.ArgumentParser(description="Human player for Atari games with frame and state capture")
+    parser.add_argument("--game", type=str, default="pong", choices=["space_invaders", "pong"], help="Game to play")
+    parser.add_argument("--save_dir", type=str, default="my_gameplay", help="Directory to save frames and state data")
+    parser.add_argument("--env_name", type=str, default=None, help="Environment name (will be set based on game)")
     parser.add_argument("--render_mode", type=str, default="human", help="Render mode (human, rgb_array)")
     parser.add_argument("--obs_mode", type=str, default="obj", help="Observation mode (obj, ram, rgb)")
     parser.add_argument("--hud", action="store_true", help="Show HUD (heads-up display)")
@@ -395,14 +538,33 @@ if __name__ == "__main__":
     
     args = parser.parse_args()
     
-    player = SpaceInvadersHumanPlayer(
-        save_dir=args.save_dir,
-        env_name=args.env_name,
-        render_mode="human",  # Override to always use human for main env
-        obs_mode=args.obs_mode,
-        hud=args.hud,
-        frameskip=args.frameskip,
-        repeat_action_probability=args.sticky_actions
-    )
+    # Set default environment name based on game
+    if args.env_name is None:
+        if args.game == "pong":
+            args.env_name = "PongNoFrameskip-v4"
+        else:  # space_invaders
+            args.env_name = "SpaceInvadersNoFrameskip-v4"
+    
+    # Create appropriate player based on game
+    if args.game == "pong":
+        player = PongHumanPlayer(
+            save_dir=args.save_dir,
+            env_name=args.env_name,
+            render_mode="human",  # Override to always use human for main env
+            obs_mode=args.obs_mode,
+            hud=args.hud,
+            frameskip=args.frameskip,
+            repeat_action_probability=args.sticky_actions
+        )
+    else:  # space_invaders
+        player = SpaceInvadersHumanPlayer(
+            save_dir=args.save_dir,
+            env_name=args.env_name,
+            render_mode="human",  # Override to always use human for main env
+            obs_mode=args.obs_mode,
+            hud=args.hud,
+            frameskip=args.frameskip,
+            repeat_action_probability=args.sticky_actions
+        )
     
     player.run() 

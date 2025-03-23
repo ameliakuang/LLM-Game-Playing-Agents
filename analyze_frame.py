@@ -4,13 +4,12 @@ import json
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.offsetbox import AnnotationBbox, TextArea
-import matplotlib.patches as patches
 from pathlib import Path
 
 # Set session information
-SESSION_ID = "20250317_102634"
-FRAME_NUM = 218
+SESSION_ID = "20250323_112920"
+FRAME_NUM = 85
+GAME_TYPE = "pong"  # Can be "pong" or "space_invaders"
 
 # Define paths for the session data
 def get_session_paths(session_id, frame_num):
@@ -130,21 +129,29 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
     ax2.set_title("Annotated with State Data")
     ax2.axis('off')
     
-    # Objects to highlight - now including all shields and bullets
-    objects_to_highlight = [
-        'Player', 
-        'Shield0', 'Shield1', 'Shield2',  # All 3 shields
-        'Bullet0', 'Bullet1',             # Both bullets
-        'Alien0', 'Alien5', 'Alien10'     # Selected aliens
-    ]
-    
-    # Define colors for different object types (normalized for matplotlib)
-    colors = {
-        'Player': (0/255, 1.0, 0/255),     # Green
-        'Shield': (1.0, 0/255, 0/255),     # Red 
-        'Alien': (0/255, 0/255, 1.0),      # Blue (changed from red to blue)
-        'Bullet': (0/255, 1.0, 1.0),       # Cyan
-    }
+    # Define objects to highlight based on game type
+    if GAME_TYPE == "pong":
+        objects_to_highlight = ['Player', 'Enemy', 'Ball']
+        # Define colors for Pong objects (normalized for matplotlib)
+        colors = {
+            'Player': (0/255, 1.0, 0/255),    # Green for player paddle
+            'Enemy': (0/255, 0/255, 1.0),     # Dark blue for enemy paddle
+            'Ball': (0/255, 1.0, 1.0),        # Cyan for ball
+        }
+    else:  # space_invaders
+        objects_to_highlight = [
+            'Player', 
+            'Shield0', 'Shield1', 'Shield2',  # All 3 shields
+            'Bullet0', 'Bullet1',             # Both bullets
+            'Alien0', 'Alien5', 'Alien10'     # Selected aliens
+        ]
+        # Define colors for Space Invaders objects
+        colors = {
+            'Player': (0/255, 1.0, 0/255),     # Green
+            'Shield': (1.0, 0/255, 0/255),     # Red 
+            'Alien': (0/255, 0/255, 1.0),      # Blue
+            'Bullet': (0/255, 1.0, 1.0),       # Cyan
+        }
     
     # Store draggable annotations for interactivity
     draggable_annotations = []
@@ -165,55 +172,68 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
             dy = float(obj.get('dy', 0))
             
             # Determine color based on object type
-            if key == 'Player':
-                color = colors['Player']
-            elif key.startswith('Shield'):
-                color = colors['Shield']
-            elif key.startswith('Alien'):
-                color = colors['Alien']
-            elif key.startswith('Bullet'):
-                color = colors['Bullet']
+            if GAME_TYPE == "pong":
+                color = colors.get(key, (1.0, 1.0, 1.0))  # White for unknown objects
             else:
-                color = (1.0, 1.0, 1.0)  # White for other objects
+                if key == 'Player':
+                    color = colors['Player']
+                elif key.startswith('Shield'):
+                    color = colors['Shield']
+                elif key.startswith('Alien'):
+                    color = colors['Alien']
+                elif key.startswith('Bullet'):
+                    color = colors['Bullet']
+                else:
+                    color = (1.0, 1.0, 1.0)  # White for other objects
             
             # Create simplified state info label with larger text
-            # Just show position and velocity without object name
             state_text = f"pos=({int(x)},{int(y)})\nvel=({dx:.1f},{dy:.1f})"
             
-            # Position label to the right of the object
-            x_offset = w + 2  # Position just to the right of the object
-            y_offset = 0      # Center vertically with the object
-            
-            # Adjust label positioning for different objects to avoid overlap
-            if key.startswith('Alien'):
-                if key == 'Alien0':
-                    y_offset = -5
-                elif key == 'Alien5':
+            # Position label based on game type and object
+            if GAME_TYPE == "pong":
+                if key == 'Player':
+                    # Position label to the right of the player paddle
+                    x_offset = w + 2
                     y_offset = 0
-                elif key == 'Alien10':
-                    y_offset = 5
-            elif key.startswith('Shield'):
-                # Position Shield labels with different offsets
-                if key == 'Shield0':
-                    x_offset += 5
-                elif key == 'Shield1':
-                    x_offset += 15
-                elif key == 'Shield2':
-                    x_offset += 25
-            elif key.startswith('Bullet'):
-                # Position Bullet labels with different offsets
-                if key == 'Bullet0':
-                    x_offset += 5
-                elif key == 'Bullet1':
-                    x_offset += 15
-            
+                elif key == 'Enemy':
+                    # Position label to the left of the enemy paddle
+                    x_offset = -20
+                    y_offset = 0
+                else:  # Ball
+                    # Position label above the ball
+                    x_offset = 0
+                    y_offset = -10
+            else:
+                # Space Invaders positioning logic
+                x_offset = w + 2
+                y_offset = 0
+                
+                if key.startswith('Alien'):
+                    if key == 'Alien0':
+                        y_offset = -5
+                    elif key == 'Alien5':
+                        y_offset = 0
+                    elif key == 'Alien10':
+                        y_offset = 5
+                elif key.startswith('Shield'):
+                    if key == 'Shield0':
+                        x_offset += 5
+                    elif key == 'Shield1':
+                        x_offset += 15
+                    elif key == 'Shield2':
+                        x_offset += 25
+                elif key.startswith('Bullet'):
+                    if key == 'Bullet0':
+                        x_offset += 5
+                    elif key == 'Bullet1':
+                        x_offset += 15
             
             # Add detailed label with position and velocity data
             annotation = ax2.annotate(
                 state_text,
                 (x + x_offset, y + y_offset),
                 color=color,
-                fontsize=10,  # Increased font size
+                fontsize=10,
                 weight='bold',
                 backgroundcolor='black',
                 va='center',
@@ -222,12 +242,12 @@ def plot_side_by_side(raw_frame, vis_frame, state_data, output_path=None):
             
             # Draw a line to connect the object to its label
             line = ax2.plot(
-                [x + w/2, x + x_offset - 2],  # From center of object to just before label
-                [y + h/2, y + y_offset],      # Keep y position aligned
+                [x + w/2, x + x_offset - 2],
+                [y + h/2, y + y_offset],
                 color=color,
                 linestyle='-',
                 linewidth=1
-            )[0]  # plot returns a list, we want the first element
+            )[0]
             
             # Make annotation draggable
             draggable = DraggableAnnotation(annotation, line)

@@ -187,7 +187,11 @@ cython_debug/
 
 *.DS_Store
 
-results/
+results/animations/
+results/checkpoints/
+results/logs/
+results/visualizations/
+
 trace_ckpt/
 visualizations/
 my_gameplay/
