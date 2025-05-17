@@ -8,16 +8,12 @@ import pandas as pd
 import io
 import contextlib
 import random
-
+import time
 
 from dotenv import load_dotenv
 from autogen import config_list_from_json
 import gymnasium as gym 
-from stable_baselines3.common.atari_wrappers import (
-    EpisodicLifeEnv,
-    FireResetEnv,
-    NoopResetEnv,
-)
+
 import opto.trace as trace
 from opto.trace import bundle, node, Module, GRAPH
 from opto.optimizers import OptoPrime
@@ -59,11 +55,6 @@ class TracedEnv:
     def init(self):
         if self.env is not None:
             self.close()
-        # base_env = gym.make(self.env_name,
-        #             render_mode=self.render_mode,
-        #             frameskip=self.frameskip,
-        #             repeat_action_probability=self.repeat_action_probability)
-
         self.env = OCAtari(self.env_name, 
                     render_mode=self.render_mode, 
                     obs_mode=self.obs_mode, 
@@ -350,7 +341,7 @@ def test_policy(policy,
     rewards = []
     
     for episode in range(num_episodes):
-        obs = env.reset()
+        obs, info = env.reset()
         episode_reward = 0
         
         for _ in range(steps_per_episode):
@@ -380,7 +371,6 @@ def optimize_policy(
     policy_ckpt=None,
     initial_policy=None,
     initial_policy_steps=None,
-    # model="gpt-4o-mini"
 ):
     if logger is None:
         logger = logging.getLogger(__name__)
@@ -413,6 +403,10 @@ def optimize_policy(
         best_iter = None
         recent_mean_rewards = []
         for i in range(n_optimization_steps):
+            mean_rewards = np.nan
+            std_rewards = np.nan
+            steps_used = np.nan
+            step_start_time = time.time()
             env.init()
             traj, error = rollout(env, horizon, policy)
 
@@ -426,29 +420,34 @@ def optimize_policy(
                                                         frameskip=frame_skip,
                                                         repeat_action_probability=sticky_action_p,
                                                         logger=logger) # run the policy on 10 games of length 4000 steps each
+                steps_used = traj['steps']  
+                
                 recent_mean_rewards.append(mean_rewards)
                 if len(recent_mean_rewards) > 5:
                     recent_mean_rewards.pop(0)
-                if mean_rewards >= 400:
+                if mean_rewards >= 350:
                     logger.info(f"Congratulations! You've achieved a perfect score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
                     rewards.append(sum(traj['rewards']))
                     optimization_data.append({
                         "Optimization Step": i,
                         "Mean Reward": mean_rewards,
-                        "Std Dev Reward": std_rewards
+                        "Std Dev Reward": std_rewards,
+                        "Wall Clock Time (s)": time.time() - step_start_time,
+                        "Training Steps": steps_used,
+                        "Max Training Steps": horizon,
                     })
                     df = pd.DataFrame(optimization_data)
                     df.to_csv(perf_csv_filename, index=False)
                     policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
                     break
-                if mean_rewards >= 380:
+                if mean_rewards >= 300:
                     feedback += (f"\nGood job! You're close to winning the game! "
                                  f"You're scoring {mean_rewards} points against the opponent on average of {num_episodes} games with std dev {std_rewards}, "
                                  f"try ensuring you return the ball, "
-                                 f"only {400-mean_rewards} points short of winning.")
+                                 f"only {350-mean_rewards} points short of winning.")
                 elif mean_rewards > 0:
                     feedback += (f"\nKeep it up! You're scoring {mean_rewards} points on average of {num_episodes} games with std dev {std_rewards} "
-                                 f"but you are still {400-mean_rewards} points from winning the game. "
+                                 f"but you are still {350-mean_rewards} points from winning the game. "
                                  f"Try improving paddle positioning to return the ball and avoid losing lives.")
                 elif mean_rewards <= 0:
                     feedback += (f"\nYour score is {mean_rewards} points on average of {num_episodes} games with std dev {std_rewards}. "
@@ -456,13 +455,7 @@ def optimize_policy(
                 target = traj['observations'][-1]
                 
                 rewards.append(sum(traj['rewards']))
-                optimization_data.append({
-                    "Optimization Step": i,
-                    "Mean Reward": mean_rewards,
-                    "Std Dev Reward": std_rewards
-                })
-                df = pd.DataFrame(optimization_data)
-                df.to_csv(perf_csv_filename, index=False)
+                
                 # only save ckpt of policies without syntax/running error
                 policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
                 # Update the best checkpoint if the current mean reward is higher
@@ -484,6 +477,7 @@ def optimize_policy(
             instruction += "The goal is to keep deflecting the ball to the block wall to destroy the bricks upon contact and score points. "
             instruction += "The brick wall consists of six rows of different colored bricks, each worth different points when hit: "
             instruction += "Red: top row, 7 pts; Orange: 2nd row: 7 pts, Yellow: 3rd row: 4 pts, Green: 4th row: 4 pts, Aqua: 5th row: 1 pt, Blue: 6th row: 1pt. "
+            instruction += "The game screen has left and right walls and brick wall where the ball bounces: left wall: x=9, right wall: x=152, player paddle: y=189. "
             instruction += "Hitting higher bricks would deflect the ball faster and make catching the ball harder. "
             instruction += "You will win the game when you score >= 400 points. "
             instruction += "You lose a life when you fail to catch the ball and the ball moves below the paddle. The game ends when you lose 5 lives. "
@@ -502,6 +496,16 @@ def optimize_policy(
                     logger.info(f"LLM response:\n {llm_output}")
             
             logger.info(f"Iteration: {i}, Feedback: {feedback}")
+            optimization_data.append({
+                    "Optimization Step": i,
+                    "Mean Reward": mean_rewards,
+                    "Std Dev Reward": std_rewards,
+                    "Wall Clock Time (s)": time.time() - step_start_time,
+                    "Training Steps": steps_used,
+                    "Max Training Steps": horizon,
+                })
+            df = pd.DataFrame(optimization_data)
+            df.to_csv(perf_csv_filename, index=False)
 
             if error:
                 # Load the latest policy checkpoint from the trace_ckpt_dir
@@ -526,15 +530,11 @@ if __name__ == "__main__":
     sticky_action_p = 0.0
     env_name = "BreakoutNoFrameskip-v4"
     horizon = 300
-    n_optimization_steps = 100
+    n_optimization_steps = 30
     memory_size = 5
-    # policy_ckpt = "/Users/ameliakuang/Repos/cs224n_llm_agent/trace_ckpt/BreakoutNoFrameskip-v4_20250312_021201_skip4_sticky0.0_horizon300_optimSteps100_mem5/9.pkl"
     policy_ckpt = None
 
     # set up initial policy
-    from trained_policies.Breakout import Policy as InitialPolicy
-    # initial_policy = InitialPolicy()
-    # initial_policy_steps = 1000
     initial_policy = None
     initial_policy_steps = None
 
@@ -564,7 +564,6 @@ if __name__ == "__main__":
         policy_ckpt=policy_ckpt,
         initial_policy=initial_policy,
         initial_policy_steps=initial_policy_steps,
-        # model="gpt-4o-mini"
 
     )
     logger.info("Training completed.")
