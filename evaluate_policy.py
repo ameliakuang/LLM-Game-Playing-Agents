@@ -8,7 +8,9 @@ from dotenv import load_dotenv
 from pong_ocatari_LLM_agent import PongOCAtariTracedEnv as PongEnv, Policy as PongPolicy
 from breakout_ocatari_LLM_agent import TracedEnv as BreakoutEnv, Policy as BreakoutPolicy
 from space_invaders_ocatari_LLM_agent import TracedEnv as SpaceInvadersEnv, Policy as SpaceInvadersPolicy
-    
+from best_policies.Pong import Policy as PongBestPolicy
+from best_policies.Breakout import Policy as BreakoutBestPolicy
+from best_policies.SpaceInvaders import Policy as SpaceInvadersBestPolicy
 load_dotenv()
 gym.register_envs(ale_py)
 
@@ -79,8 +81,10 @@ if __name__ == "__main__":
                                render_mode=render_mode,
                                frameskip=frameskip,
                                repeat_action_probability=repeat_action_probability)
+        # policy = SpaceInvadersBestPolicy()
         policy = SpaceInvadersPolicy()
         policy.load(policy_ckpt)
+        
     else:
         raise ValueError(f"Invalid game name {args.game}")
     
