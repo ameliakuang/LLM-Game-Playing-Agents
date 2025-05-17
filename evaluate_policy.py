@@ -81,7 +81,6 @@ if __name__ == "__main__":
                                render_mode=render_mode,
                                frameskip=frameskip,
                                repeat_action_probability=repeat_action_probability)
-        # policy = SpaceInvadersBestPolicy()
         policy = SpaceInvadersPolicy()
         policy.load(policy_ckpt)
         
