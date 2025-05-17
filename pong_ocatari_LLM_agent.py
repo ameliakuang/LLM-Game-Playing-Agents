@@ -8,6 +8,7 @@ import pandas as pd
 import io
 import contextlib
 import random
+import time
 
 
 from dotenv import load_dotenv
@@ -130,8 +131,8 @@ class Policy(Module):
 
         Game Setup:
         - Screen dimensions: The game screen has boundaries where the ball bounces
-          - Top boundary: approximately y=30
-          - Bottom boundary: approximately y=190
+          - Top boundary: y=30
+          - Bottom boundary: y=190
         - Paddle positions:
           - Player paddle: right side of screen (x = 140)
           - Enemy paddle: left side of screen (x = 16)
@@ -274,6 +275,10 @@ def optimize_policy(
         optimization_data = []
         logger.info("Optimization Starts")
         for i in range(n_optimization_steps):
+            step_start_time = time.time()
+            mean_rewards = np.nan
+            std_rewards = np.nan
+            steps_used = np.nan
             env.init()
             traj, error = rollout(env, horizon, policy)
 
@@ -282,13 +287,17 @@ def optimize_policy(
                 mean_rewards, std_rewards = test_policy(policy,
                                                         frameskip=frame_skip,
                                                         repeat_action_probability=sticky_action_p) # run the policy on 10 games of length 4000 steps each
+                steps_used = traj['steps']
                 if mean_rewards >= 21:
-                    logger.info("Congratulations! You've achieved a perfect score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
+                    logger.info(f"Congratulations! You've achieved a perfect score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
                     rewards.append(sum(traj['rewards']))
                     optimization_data.append({
                         "Optimization Step": i,
                         "Mean Reward": mean_rewards,
-                        "Std Dev Reward": std_rewards
+                        "Std Dev Reward": std_rewards,
+                        "Wall Clock Time (s)": time.time() - step_start_time,
+                        "Training Steps": steps_used,
+                        "Max Training Steps": horizon,
                     })
                     df = pd.DataFrame(optimization_data)
                     df.to_csv(perf_csv_filename, index=False)
@@ -308,13 +317,6 @@ def optimize_policy(
                 target = traj['observations'][-1]
                 
                 rewards.append(sum(traj['rewards']))
-                optimization_data.append({
-                    "Optimization Step": i,
-                    "Mean Reward": mean_rewards,
-                    "Std Dev Reward": std_rewards
-                })
-                df = pd.DataFrame(optimization_data)
-                df.to_csv(perf_csv_filename, index=False)
             else:
                 feedback = error.exception_node.create_feedback()
                 target = error.exception_node
@@ -342,6 +344,16 @@ def optimize_policy(
                     logger.info(f"LLM response:\n {llm_output}")
             
             logger.info(f"Iteration: {i}, Feedback: {feedback}")
+            optimization_data.append({
+                    "Optimization Step": i,
+                    "Mean Reward": mean_rewards,
+                    "Std Dev Reward": std_rewards,
+                    "Wall Clock Time (s)": time.time() - step_start_time,
+                    "Training Steps": steps_used,
+                    "Max Training Steps": horizon,
+                })
+            df = pd.DataFrame(optimization_data)
+            df.to_csv(perf_csv_filename, index=False)
     finally:
         if env is not None:
             env.close()
