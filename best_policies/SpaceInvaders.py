@@ -30,25 +30,30 @@ class Policy(Module):
         Returns:
             bool: True if should shoot, False otherwise
         '''
+        # There can only be one player bullet on the field at a time
+        # Check for player bullets (which have negative dy velocity)
         for key, obj in obs.items():
             if key.startswith("Bullet") and obj.get("dy", 0) < 0:
                 return False
 
         player = obs["Player"]
+        closest_alien_distance = float("inf")
+        closest_alien = None
+
         for key, obj in obs.items():
             if key.startswith("Alien"):
-                if abs(obj["x"] - player["x"]) < 7:  # Increased alignment threshold
-                    if obj["y"] > 60 or (
-                        obj["y"] > 40 and obj.get("dy", 0) > 0
-                    ):  # More aggressive for lower aliens
-                        lead_factor = 0.3  # Increased lead factor
-                        predicted_x = obj["x"] + obj.get("dx", 0) * lead_factor
-                        if abs(predicted_x - player["x"]) < 8:
-                            return True
-                elif abs(obj["x"] - player["x"]) < 15 and (
-                    (obj["x"] > player["x"] and obj.get("dx", 0) < 0)
-                    or (obj["x"] < player["x"] and obj.get("dx", 0) > 0)
-                ):
+                distance = abs(obj["x"] - player["x"])
+                if distance < closest_alien_distance:
+                    closest_alien_distance = distance
+                    closest_alien = obj
+
+        if closest_alien:
+            # Check if alien is aligned with player (within 15 pixels)
+            if abs(closest_alien["x"] - player["x"]) < 15:
+                # Prioritize lower aliens (higher y value)
+                if (
+                    closest_alien["y"] > 30
+                ):  # Lowered threshold for more aggressive shooting
                     return True
         return False
 
@@ -71,15 +76,15 @@ class Policy(Module):
         Returns:
             int: -1 for left, 1 for right, 0 for no movement
         '''
+        import random
+
         player = obs["Player"]
         move = 0
         threat_left = 0
         threat_right = 0
         aliens_left = 0
         aliens_right = 0
-
-        screen_width = 210
-        edge_buffer = 25  # Increased edge buffer
+        screen_width = 160  # Assuming standard Space Invaders screen width
 
         for key, obj in obs.items():
             if key.startswith("Alien"):
@@ -87,36 +92,35 @@ class Policy(Module):
                     aliens_left += 1
                 else:
                     aliens_right += 1
-            elif key.startswith("Bullet") and obj["dy"] > 0:
-                time_to_player = (player["y"] - obj["y"]) / obj["dy"]
-                predicted_x = obj["x"] + obj["dx"] * time_to_player
-                distance = abs(predicted_x - player["x"])
-                if distance < 20:  # Increased dodging threshold
-                    threat_weight = max(0, 20 - distance)
-                    if obj["x"] < player["x"]:
-                        threat_left += threat_weight
-                    else:
-                        threat_right += threat_weight
+            elif key.startswith("Bullet") and obj["dy"] > 0:  # Enemy bullet
+                if obj["x"] < player["x"]:
+                    threat_left += 1
+                else:
+                    threat_right += 1
+                # Consider vertical position of bullets
+                if abs(obj["x"] - player["x"]) < 10 and obj["y"] > player["y"] - 30:
+                    move = 1 if obj["x"] < player["x"] else -1
 
-        if threat_left > 0 or threat_right > 0:
+        # Move away from threats if no immediate vertical threat
+        if move == 0:
             if threat_left > threat_right:
                 move = 1
-            else:
+            elif threat_right > threat_left:
                 move = -1
-        else:
-            alien_density_left = aliens_left / max(1, player["x"])
-            alien_density_right = aliens_right / max(1, screen_width - player["x"])
-            if alien_density_left > alien_density_right:
+            # If no immediate threat, move towards more aliens
+            elif aliens_left > aliens_right:
                 move = -1
-            elif alien_density_right > alien_density_left:
+            elif aliens_right > aliens_left:
                 move = 1
 
-        if player["x"] < edge_buffer and move == -1:
+        # Stay away from screen edges
+        if player["x"] < 10 and move == -1:
             move = 1
-        elif player["x"] > screen_width - edge_buffer and move == 1:
+        elif player["x"] > screen_width - 10 and move == 1:
             move = -1
 
-        if random.random() < 0.05:  # Reduced random movement probability
+        # Add small random movement
+        if random.random() < 0.1:
             move = random.choice([-1, 0, 1])
 
         return move
