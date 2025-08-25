@@ -1,4 +1,4 @@
-# cs224n_LLM_agent
+# Learning Game-Playing Agents with Generative Code Optimization
 
 This repository contains code that uses Trace LLM optimizers (OptoPrime) to optimize python policies to play Atari games.
 
