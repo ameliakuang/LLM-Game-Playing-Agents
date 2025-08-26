@@ -12,6 +12,7 @@ import time
 
 
 from dotenv import load_dotenv
+load_dotenv(override=True)
 from autogen import config_list_from_json
 import gymnasium as gym 
 import opto.trace as trace
@@ -21,7 +22,7 @@ from opto.trace.bundle import ExceptionNode
 from opto.trace.errors import ExecutionError
 from ocatari.core import OCAtari
 
-load_dotenv(override=True)
+
 gym.register_envs(ale_py)
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 log_dir = Path("logs")
@@ -224,7 +225,7 @@ def test_policy(policy,
     rewards = []
     
     for episode in range(num_episodes):
-        obs = env.reset()
+        obs, _ = env.reset()
         episode_reward = 0
         
         for _ in range(steps_per_episode):
@@ -251,16 +252,10 @@ def optimize_policy(
     frame_skip=4,
     sticky_action_p=0.00,
     logger=None,
-    # model="gpt-4o-mini"
 ):
     if logger is None:
         logger = logging.getLogger(__name__)
     
-    # Get the config file path from environment variable
-    # config_path = os.getenv("OAI_CONFIG_LIST")
-    # config_list = config_list_from_json(config_path)
-    # config_list = [config for config in config_list if config["model"] == model]
-    # optimizer = OptoPrime(policy.parameters(), config_list=config_list, memory_size=memory_size)
 
     policy = Policy()
     optimizer = OptoPrime(policy.parameters(), memory_size=memory_size)
@@ -392,7 +387,6 @@ if __name__ == "__main__":
         frame_skip=frame_skip,
         sticky_action_p=sticky_action_p,
         logger=logger,
-        # model="gpt-4o-mini"
 
     )
     logger.info("Training completed.")
