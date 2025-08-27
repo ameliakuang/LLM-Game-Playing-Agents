@@ -12,10 +12,8 @@ import warnings
 import argparse
 import sys
 import random
+import time
 import imageio.v2 as imageio
-
-# os.environ['TRACE_CUSTOMLLM_MODEL'] = "anthropic.claude-3-5-haiku-20241022-v1:0"
-os.environ['TRACE_CUSTOMLLM_MODEL'] = "anthropic.claude-3-5-sonnet-20240620-v1:0"
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -37,10 +35,9 @@ base_trace_ckpt_dir.mkdir(exist_ok=True)
 
 
 
-class SpaceInvadersOCAtariTracedEnv:
+class TracedEnv:
     def __init__(self, 
                  env_name="SpaceInvadersNoFrameskip-v4",
-                #  render_mode="human",
                  render_mode=None,
                  obs_mode="obj",
                  hud=False,
@@ -166,9 +163,8 @@ class Policy(Module):
             Player bullets have negative dy velocity and alien bullets have positive dy velocity
         
         Strategy tips:
-        - You can only have one missile at a time
-        - Try to shoot when aliens are aligned with your ship
-        - Prioritize shooting at lower aliens as they're closer to you
+        - Shoot aliens and satellites and consider their movement when deciding to shoot (remember aliens and satellites move! so need to account for speed and shooting position)
+        - Prioritize shooting aliens with larger y coordinates (closer to you)
         - Consider the movement of aliens when deciding to shoot
         
         Returns:
@@ -202,10 +198,10 @@ class Policy(Module):
             Player bullets have negative dy velocity and alien bullets have positive dy velocity
         
         Strategy tips:
-        - Move to dodge enemy projectiles
-        - Position yourself under aliens to shoot them
+        - Move to dodge enemy projectiles. Use shields as covers, because they shield the alien bullets for the player but shields can be damaged and disappear.
+        - Position yourself to shoot aliens and satellites (remember aliens and satellites move! so need to account for speed and shooting position)
+        - Prioritize shooting aliens with larger y coordinates
         - Stay away from the edges of the screen
-        - Consider moving toward areas with more aliens to increase score
         
         Returns:
             int: -1 for left, 1 for right, 0 for no movement
@@ -251,6 +247,12 @@ class Policy(Module):
         Args:
             shoot (bool): Whether to shoot
             movement (int): Movement direction
+        
+        Strategy tips:
+        - Move to dodge enemy projectiles
+        - Position yourself to shoot aliens and satellites (remember aliens and satellites move! so need to account for speed and shooting position)
+        - Prioritize shooting aliens with larger y coordinates
+        - Stay away from the edges of the screen
         
         Action mapping:
         - 0: NOOP (no operation)
@@ -415,7 +417,7 @@ def rollout(env, horizon, policy, visualize=False, debug=False, vis_dir=None, te
     return trajectory, error
 
 def test_policy(policy, 
-                num_episodes=10, 
+                num_episodes=1, 
                 steps_per_episode=4000,
                 frameskip=1,
                 repeat_action_probability=0.0,
@@ -452,9 +454,9 @@ def test_policy(policy,
     rewards = []
     
     try:
-        env = SpaceInvadersOCAtariTracedEnv(render_mode=None,
-                                           frameskip=frameskip,
-                                           repeat_action_probability=repeat_action_probability)
+        env = TracedEnv(render_mode=None,
+                        frameskip=frameskip,
+                        repeat_action_probability=repeat_action_probability)
         
         for episode in range(num_episodes):
             episode_reward = 0
@@ -742,7 +744,7 @@ def optimize_policy(
     horizon=400,
     memory_size=5,
     n_optimization_steps=10,
-    verbose=False,
+    verbose=True,
     frame_skip=4,
     sticky_action_p=0.00,
     logger=None,
@@ -831,13 +833,17 @@ def optimize_policy(
         print("Starting optimization...")
         
         # Initialize environment
-        env = SpaceInvadersOCAtariTracedEnv(env_name=env_name,
-                                           render_mode="human" if visualize else None,
-                                           frameskip=frame_skip,
-                                           repeat_action_probability=sticky_action_p)
+        env = TracedEnv(env_name=env_name,
+                        render_mode="human" if visualize else None,
+                        frameskip=frame_skip,
+                        repeat_action_probability=sticky_action_p)
         
         for i in range(n_optimization_steps):
             print(f"\nIteration {i+1}/{n_optimization_steps}:")
+            step_start_time = time.time()
+            mean_rewards = np.nan
+            std_rewards = np.nan
+            steps_used = np.nan
             
             # Maximum number of retry attempts for this iteration
             max_retries = 3
@@ -888,7 +894,7 @@ def optimize_policy(
                             logger.error(f"Error during policy testing: {e}")
                             mean_rewards = episode_score
                             std_rewards = 0.0
-                        
+                        steps_used = traj['steps']
                         # Provide feedback based on performance
                         if mean_rewards >= 2000:
                             logger.info(f"Excellent performance! Average score: {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
@@ -897,7 +903,10 @@ def optimize_policy(
                             optimization_data.append({
                                 "Optimization Step": i,
                                 "Mean Reward": mean_rewards,
-                                "Std Dev Reward": std_rewards
+                                "Std Dev Reward": std_rewards,
+                                "Wall Clock Time (s)": time.time() - step_start_time,
+                                "Training Steps": steps_used,
+                                "Max Training Steps": horizon
                             })
                             df = pd.DataFrame(optimization_data)
                             df.to_csv(perf_csv_filename, index=False)
@@ -917,13 +926,6 @@ def optimize_policy(
                         target = traj['observations'][-1]
                         
                         rewards.append(episode_score)
-                        optimization_data.append({
-                            "Optimization Step": i,
-                            "Mean Reward": mean_rewards,
-                            "Std Dev Reward": std_rewards
-                        })
-                        df = pd.DataFrame(optimization_data)
-                        df.to_csv(perf_csv_filename, index=False)
                         
                         # Print a clean summary to console
                         print(f"  Episode Score: {episode_score:.1f}")
@@ -996,10 +998,10 @@ def optimize_policy(
                 print(f"  Failed to save policy checkpoint: {str(save_error)[:100]}...")
 
             instruction = "In Space Invaders, you control a ship at the bottom of the screen and defend against waves of descending aliens. "
-            instruction += "The goal is to shoot as many aliens as possible while avoiding their projectiles. "
-            instruction += "You score points by destroying aliens, with higher rows worth more points. "
+            instruction += "The goal is to shoot as many aliens and satellite as possible while avoiding their projectiles. "
+            instruction += "You score points by shooting aliens, with higher rows worth more points, and score highest points by shooting satellite. "
             instruction += "The policy should decide when to shoot and how to move to maximize score while avoiding enemy fire. "
-            instruction += "There are shields that absorb both player and alien projectiles. "
+            instruction += "There are shields that absorb both player and alien projectiles. Use shields as covers but they can be damaged and disappear. "
             instruction += "Analyze the trace to figure out how to improve your strategy for shooting aliens and dodging projectiles."
             instruction += "When you generate code, don't write any thing like '\\\\n' in your response. Also keep the function comments and docstrings as they are."
             
@@ -1032,6 +1034,18 @@ def optimize_policy(
                         f.write(f"Average Test Score: {mean_rewards:.1f}\n")
                         f.write(f"Test Score Std Dev: {std_rewards:.1f}\n\n")
                         f.write(f"Feedback: {feedback}\n")
+            
+            optimization_data.append({
+                "Optimization Step": i,
+                "Mean Reward": mean_rewards,
+                "Std Dev Reward": std_rewards,
+                "Wall Clock Time (s)": time.time() - step_start_time,
+                "Training Steps": steps_used,
+                "Max Training Steps": horizon,
+
+            })
+            df = pd.DataFrame(optimization_data)
+            df.to_csv(perf_csv_filename, index=False)
                         
     except Exception as e:
         logger.exception(f"Error during optimization: {e}")
@@ -1061,7 +1075,7 @@ if __name__ == "__main__":
     # Parse command line arguments
     parser = argparse.ArgumentParser(description="Train an AI agent to play Space Invaders")
     parser.add_argument("--env", type=str, default="SpaceInvadersNoFrameskip-v4", help="Environment name")
-    parser.add_argument("--horizon", type=int, default=10, help="Maximum steps per episode")
+    parser.add_argument("--horizon", type=int, default=25, help="Maximum steps per episode")
     parser.add_argument("--steps", type=int, default=20, help="Number of optimization steps")
     parser.add_argument("--memory", type=int, default=5, help="Memory size for optimization")
     parser.add_argument("--frameskip", type=int, default=4, help="Number of frames to skip")

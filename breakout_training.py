@@ -13,6 +13,7 @@ import time
 from dotenv import load_dotenv
 from autogen import config_list_from_json
 import gymnasium as gym 
+load_dotenv(override=True)
 
 import opto.trace as trace
 from opto.trace import bundle, node, Module, GRAPH
@@ -20,8 +21,6 @@ from opto.optimizers import OptoPrime
 from opto.trace.bundle import ExceptionNode
 from opto.trace.errors import ExecutionError
 from ocatari.core import OCAtari
-
-load_dotenv(override=True)
 gym.register_envs(ale_py)
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 log_dir = Path("logs")
@@ -37,9 +36,7 @@ class TracedEnv:
                  obs_mode="ori",
                  hud=False,
                  frameskip=4,
-                 repeat_action_probability=0.0,
-                 initial_policy=None,
-                 initial_policy_steps=None):
+                 repeat_action_probability=0.0):
         self.env_name = env_name
         self.render_mode = render_mode
         self.obs_mode = obs_mode
@@ -47,8 +44,6 @@ class TracedEnv:
         self.frameskip = frameskip
         self.repeat_action_probability = repeat_action_probability
         self.env = None
-        self.initial_policy = initial_policy
-        self.initial_policy_steps = initial_policy_steps
         self.current_lives = None
         self.init()
     
@@ -124,31 +119,9 @@ class TracedEnv:
         self.current_lives = info.get('lives')
         self.obs = self.extract_game_state(self.env.objects, obs, info)
         self.obs['reward'] = np.nan
-        if self.initial_policy:
-            steps = 0
-            while (steps < self.initial_policy_steps):
-                action = self.initial_policy(self.obs)
-                next_obs, reward, terminated, truncated, info = self.policy_step(action)
-                self.obs = self.extract_game_state(self.env.objects, next_obs, info)
-                self.obs['reward'] = reward
-                if terminated or truncated:
-                    raise ValueError(f"Initial policy terminated the env in initial policy steps {self.initial_policy_steps}")
-                steps += 1
-            self.obs = self.extract_game_state(self.env.objects, obs, info)
-            self.obs['reward'] =reward
 
         return self.obs, info
     
-    def policy_step(self, action):
-        next_obs, reward, termination, truncation, info = self.env.step(action)
-        lives = info.get('lives')
-        if self.current_lives and lives < self.current_lives:
-            next_obs, reward, termination, truncation, info = self.env.step(1)
-        self.current_lives = lives
-        self.obs = self.extract_game_state(self.env.objects, next_obs, info)
-        self.obs['rewrad'] = reward
-        return self.obs, reward, termination, truncation, info
-        
     
     def step(self, action):
         try:
@@ -369,18 +342,10 @@ def optimize_policy(
     sticky_action_p=0.00,
     logger=None,
     policy_ckpt=None,
-    initial_policy=None,
-    initial_policy_steps=None,
 ):
     if logger is None:
         logger = logging.getLogger(__name__)
     
-    # Get the config file path from environment variable
-    # config_path = os.getenv("OAI_CONFIG_LIST")
-    # config_list = config_list_from_json(config_path)
-    # config_list = [config for config in config_list if config["model"] == model]
-    # optimizer = OptoPrime(policy.parameters(), config_list=config_list, memory_size=memory_size)
-
     policy = Policy()
     if policy_ckpt:
         logger.info(f"Continuing training from ckpt: {policy_ckpt}")
@@ -388,9 +353,7 @@ def optimize_policy(
     optimizer = OptoPrime(policy.parameters(), memory_size=memory_size)
     env = TracedEnv(env_name=env_name,
                     frameskip=frame_skip,
-                    repeat_action_probability=sticky_action_p,
-                    initial_policy=initial_policy,
-                    initial_policy_steps=initial_policy_steps)
+                    repeat_action_probability=sticky_action_p,)
     perf_csv_filename = log_dir / f"perf_{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.csv"
     trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}"
     trace_ckpt_dir.mkdir(exist_ok=True)
@@ -534,10 +497,6 @@ if __name__ == "__main__":
     memory_size = 5
     policy_ckpt = None
 
-    # set up initial policy
-    initial_policy = None
-    initial_policy_steps = None
-
     # Set up logging
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
@@ -545,7 +504,7 @@ if __name__ == "__main__":
     console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
     logger.addHandler(console_handler)
     # Set up file logging
-    log_file = log_dir / f"{env_name.replace('/', '_')}_OCAtari_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}_initPolicy{initial_policy!=None}.log"
+    log_file = log_dir / f"{env_name.replace('/', '_')}_OCAtari_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.log"
 
     file_handler = logging.FileHandler(log_file)
     file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
@@ -562,8 +521,6 @@ if __name__ == "__main__":
         sticky_action_p=sticky_action_p,
         logger=logger,
         policy_ckpt=policy_ckpt,
-        initial_policy=initial_policy,
-        initial_policy_steps=initial_policy_steps,
 
     )
     logger.info("Training completed.")
