@@ -1,6 +1,6 @@
 # Learning Game-Playing Agents with Generative Code Optimization
 
-This repository contains code that uses Trace LLM optimizers (OptoPrime) to optimize python policies to play Atari games.
+This repository contains code for *Learning Game-Playing Agents with Generative Code Optimization* (ICML 2025 PRAL Workshop). We use Trace LLM optimizers (OptoPrime) to optimize python policies to play Atari games. Paper link: https://openreview.net/forum?id=ZM65X3NoTd
 
 ## Setup
 
