@@ -1,6 +1,5 @@
 import os
 import ale_py
-import logging
 import datetime
 from pathlib import Path
 import numpy as np
@@ -20,7 +19,8 @@ from opto.trace import bundle, node, Module, GRAPH
 from opto.optimizers import OptoPrime
 from opto.trace.bundle import ExceptionNode
 from opto.trace.errors import ExecutionError
-from ocatari.core import OCAtari
+from trace_envs.pong import PongOCAtariTracedEnv
+from logging_util import setup_logger
 
 
 gym.register_envs(ale_py)
@@ -29,90 +29,6 @@ log_dir = Path("logs")
 log_dir.mkdir(exist_ok=True)
 base_trace_ckpt_dir = Path("trace_ckpt")
 base_trace_ckpt_dir.mkdir(exist_ok=True)
-
-class PongOCAtariTracedEnv:
-    def __init__(self, 
-                 env_name="PongNoFrameskip-v4",
-                 render_mode="human",
-                 obs_mode="obj",
-                 hud=False,
-                 frameskip=4,
-                 repeat_action_probability=0.0):
-        self.env_name = env_name
-        self.render_mode = render_mode
-        self.obs_mode = obs_mode
-        self.hud = hud
-        self.frameskip = frameskip
-        self.repeat_action_probability = repeat_action_probability
-        self.env = None
-        self.init()
-    
-    def init(self):
-        if self.env is not None:
-            self.close()
-        self.env = OCAtari(self.env_name, 
-                           render_mode=self.render_mode, 
-                           obs_mode=self.obs_mode, 
-                           hud=self.hud,
-                           frameskip=self.frameskip,
-                           repeat_action_probability=self.repeat_action_probability)
-        self.obs, _ = self.env.reset()
-    
-    def close(self):
-        if self.env is not None:
-            self.env.close()
-            self.env = None
-            self.obs = None
-    
-    def __del__(self):
-        self.close()
-
-    def extract_obj_state(self, objects):
-        obs = dict()
-        for object in objects:
-            obs[object.category] = {"x": object.x,
-                                    "y": object.y,
-                                    "w": object.w,
-                                    "h": object.h,
-                                    "dx": object.dx,
-                                    "dy": object.dy,}
-        return obs
-
-
-    @bundle()
-    def reset(self):
-        """
-        Reset the environment and return the initial observation and info.
-        """
-        _, info = self.env.reset()
-        self.obs = self.extract_obj_state(self.env.objects)
-        self.obs['reward'] = np.nan
-
-        return self.obs, info
-    
-    def step(self, action):
-        try:
-            control = action.data if isinstance(action, trace.Node) else action
-            next_obs, reward, termination, truncation, info = self.env.step(control)
-            self.obs = self.extract_obj_state(self.env.objects)
-            self.obs['reward'] = reward
-        except Exception as e:
-            e_node = ExceptionNode(
-                e,
-                inputs={"action": action},
-                description="[exception] The operator step raises an exception.",
-                name="exception_step",
-            )
-            raise ExecutionError(e_node)
-        @bundle()
-        def step(action):
-            """
-            Take action in the environment and return the next observation
-            """
-            return self.obs
-
-        self.obs = step(action)
-        return self.obs, reward, termination, truncation, info
 
 @trace.model
 class Policy(Module):
@@ -254,8 +170,7 @@ def optimize_policy(
     logger=None,
 ):
     if logger is None:
-        logger = logging.getLogger(__name__)
-    
+        logger = setup_logger(__name__, env_name)
 
     policy = Policy()
     optimizer = OptoPrime(policy.parameters(), memory_size=memory_size)
@@ -365,17 +280,18 @@ if __name__ == "__main__":
     memory_size = 5
 
     # Set up logging
-    logger = logging.getLogger(__name__)
-    logger.setLevel(logging.INFO)
-    console_handler = logging.StreamHandler()
-    console_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    logger.addHandler(console_handler)
-    # Set up file logging
-    log_file = log_dir / f"{env_name.replace('/', '_')}_OCAtari_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.log"
-    
-    file_handler = logging.FileHandler(log_file)
-    file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
-    logger.addHandler(file_handler)
+    logger = setup_logger(
+        __name__,
+        env_name,
+        timestamp=timestamp,
+        frame_skip=frame_skip,
+        sticky_action_p=sticky_action_p,
+        horizon=horizon,
+        optim_steps=n_optimization_steps,
+        memory_size=memory_size,
+        log_dir=log_dir,
+        prefix="OCAtari"
+    )
     
     logger.info("Starting Pong AI training...")
     rewards = optimize_policy(
