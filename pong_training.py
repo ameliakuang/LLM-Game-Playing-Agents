@@ -21,6 +21,7 @@ from opto.trace.bundle import ExceptionNode
 from opto.trace.errors import ExecutionError
 from trace_envs.pong import PongOCAtariTracedEnv
 from logging_util import setup_logger
+from training_utils import rollout, evaluate_policy
 
 
 gym.register_envs(ale_py)
@@ -94,70 +95,6 @@ class Policy(Module):
             
 
 
-def rollout(env, horizon, policy):
-    """Rollout a policy in an env for horizon steps."""
-    try:
-        obs, _ = env.reset()
-        trajectory = dict(observations=[], actions=[], rewards=[], terminations=[], truncations=[], infos=[], steps=0)
-        trajectory["observations"].append(obs)
-        
-        for _ in range(horizon):
-            error = None
-            try:
-                action = policy(obs)
-                next_obs, reward, termination, truncation, info = env.step(action)
-            except trace.ExecutionError as e:
-                error = e
-                reward = np.nan
-                termination = True
-                truncation = False
-                info = {}
-            
-            if error is None:
-                trajectory["observations"].append(next_obs)
-                trajectory["actions"].append(action)
-                trajectory["rewards"].append(reward)
-                trajectory["terminations"].append(termination)
-                trajectory["truncations"].append(truncation)
-                trajectory["infos"].append(info)
-                trajectory["steps"] += 1
-                if termination or truncation:
-                    break
-                obs = next_obs
-    finally:
-        env.close()
-    
-    return trajectory, error
-
-def test_policy(policy, 
-                num_episodes=10, 
-                steps_per_episode=4000,
-                frameskip=1,
-                repeat_action_probability=0.0):
-    logger.info("Evaluating policy")
-    env = PongOCAtariTracedEnv(render_mode=None,
-                               frameskip=frameskip,
-                               repeat_action_probability=repeat_action_probability)
-    rewards = []
-    
-    for episode in range(num_episodes):
-        obs, _ = env.reset()
-        episode_reward = 0
-        
-        for _ in range(steps_per_episode):
-            action = policy(obs)
-            obs, reward, terminated, truncated, _ = env.step(action)
-            episode_reward += reward
-            
-            if terminated or truncated:
-                break
-        
-        rewards.append(episode_reward)
-    env.close()
-    
-    mean_reward = np.mean(rewards)
-    std_reward = np.std(rewards)
-    return mean_reward, std_reward
 
 def optimize_policy(
     env_name="PongNoFrameskip-v4",
@@ -194,9 +131,13 @@ def optimize_policy(
 
             if error is None:
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
-                mean_rewards, std_rewards = test_policy(policy,
+                mean_rewards, std_rewards = evaluate_policy(policy,
+                                                        PongOCAtariTracedEnv,
+                                                        env_name,
+                                                        num_episodes=10,
                                                         frameskip=frame_skip,
-                                                        repeat_action_probability=sticky_action_p) # run the policy on 10 games of length 4000 steps each
+                                                        repeat_action_probability=sticky_action_p,
+                                                        logger=logger)
                 steps_used = traj['steps']
                 if mean_rewards >= 21:
                     logger.info(f"Congratulations! You've achieved a perfect score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")

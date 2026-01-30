@@ -15,12 +15,11 @@ import gymnasium as gym
 load_dotenv(override=True)
 
 import opto.trace as trace
-from opto.trace import bundle, node, Module, GRAPH
+from opto.trace import bundle, Module
 from opto.optimizers import OptoPrime
-from opto.trace.bundle import ExceptionNode
-from opto.trace.errors import ExecutionError
 from trace_envs.breakout import TracedEnv
 from logging_util import setup_logger
+from training_utils import rollout, evaluate_policy
 
 gym.register_envs(ale_py)
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -143,71 +142,6 @@ class Policy(Module):
 
 
 
-def rollout(env, horizon, policy):
-    """Rollout a policy in an env for horizon steps."""
-    try:
-        obs, _ = env.reset()
-        trajectory = dict(observations=[], actions=[], rewards=[], terminations=[], truncations=[], infos=[], steps=0)
-        trajectory["observations"].append(obs)
-        
-        for i in range(horizon):
-            error = None
-            try:
-                action = policy(obs)
-                next_obs, reward, termination, truncation, info = env.step(action)
-            except trace.ExecutionError as e:
-                error = e
-                reward = np.nan
-                termination = True
-                truncation = False
-                info = {}
-            
-            if error is None:
-                trajectory["observations"].append(next_obs)
-                trajectory["actions"].append(action)
-                trajectory["rewards"].append(reward)
-                trajectory["terminations"].append(termination)
-                trajectory["truncations"].append(truncation)
-                trajectory["infos"].append(info)
-                trajectory["steps"] += 1
-                if termination or truncation:
-                    break
-                obs = next_obs
-    finally:
-        env.close()
-    
-    return trajectory, error
-
-def test_policy(policy, 
-                num_episodes=1, 
-                steps_per_episode=4000,
-                frameskip=1,
-                repeat_action_probability=0.0,
-                logger=None):
-    logger.info("Evaluating policy")
-    env = TracedEnv(render_mode=None,
-                    frameskip=frameskip,
-                    repeat_action_probability=repeat_action_probability)
-    rewards = []
-    
-    for episode in range(num_episodes):
-        obs, info = env.reset()
-        episode_reward = 0
-        
-        for _ in range(steps_per_episode):
-            action = policy(obs)
-            obs, reward, terminated, truncated, _ = env.step(action)
-            episode_reward += reward
-            
-            if terminated or truncated:
-                break
-        
-        rewards.append(episode_reward)
-    env.close()
-    
-    mean_reward = np.mean(rewards)
-    std_reward = np.std(rewards)
-    return mean_reward, std_reward
 
 def optimize_policy(
     env_name="BreakoutNoFrameskip-v4",
@@ -254,12 +188,14 @@ def optimize_policy(
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
                 num_episodes = 1
                 steps_per_episode = 4000
-                mean_rewards, std_rewards = test_policy(policy,
+                mean_rewards, std_rewards = evaluate_policy(policy,
+                                                        TracedEnv,
+                                                        env_name,
                                                         num_episodes=num_episodes,
                                                         steps_per_episode=steps_per_episode,
                                                         frameskip=frame_skip,
                                                         repeat_action_probability=sticky_action_p,
-                                                        logger=logger) # run the policy on 10 games of length 4000 steps each
+                                                        logger=logger) # run the policy on games of length 4000 steps each
                 steps_used = traj['steps']  
                 
                 recent_mean_rewards.append(mean_rewards)
