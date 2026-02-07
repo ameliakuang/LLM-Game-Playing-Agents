@@ -16,7 +16,12 @@ load_dotenv(override=True)
 
 import opto.trace as trace
 from opto.trace import bundle, Module
-from opto.optimizers import OptoPrime
+# from opto.optimizers import OptoPrime
+from opto.optimizers.optoprime import OptoPrime
+# from opto.optimizers.optoprime_v3 import (
+#     OptoPrimeV3, ProblemInstance,
+#     Content, OptimizerPromptSymbolSetJSON
+# )
 from trace_envs.breakout import TracedEnv
 from logging_util import setup_logger
 from training_utils import rollout, evaluate_policy
@@ -161,12 +166,18 @@ def optimize_policy(
     if policy_ckpt:
         logger.info(f"Continuing training from ckpt: {policy_ckpt}")
         policy.load(policy_ckpt)
-    optimizer = OptoPrime(policy.parameters(), memory_size=memory_size)
+    # optimizer = OptoPrimeV3(policy.parameters(), memory_size=memory_size, max_tokens=4096)
+    optimizer = OptoPrime(policy.parameters(), memory_size=memory_size, max_tokens=4096)
+    # optimizer = OptoPrimeV3([policy.parameters()], use_json_object_format=True,
+    #                     memory_size=memory_size,
+    #                     ignore_extraction_error=False,
+    #                     include_example=False,
+    #                     optimizer_prompt_symbol_set=OptimizerPromptSymbolSetJSON())
     env = TracedEnv(env_name=env_name,
                     frameskip=frame_skip,
                     repeat_action_probability=sticky_action_p,)
-    perf_csv_filename = log_dir / f"perf_{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.csv"
-    trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}"
+    perf_csv_filename = log_dir / f"perf_{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.csv"
+    trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}"
     trace_ckpt_dir.mkdir(exist_ok=True)
     try:
         rewards = []

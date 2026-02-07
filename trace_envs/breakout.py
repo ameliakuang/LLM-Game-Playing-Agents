@@ -9,7 +9,7 @@ from ocatari.core import OCAtari
 class TracedEnv:
     def __init__(self, 
                  env_name="BreakoutNoFrameskip-v4",
-                 render_mode="human",
+                 render_mode="rgb_array",
                  obs_mode="ori",
                  hud=False,
                  frameskip=4,
@@ -21,7 +21,8 @@ class TracedEnv:
         self.frameskip = frameskip
         self.repeat_action_probability = repeat_action_probability
         self.env = None
-        self.current_lives = None
+        self.lives = 0
+        self.was_real_done = True
         self.init()
     
     def init(self):
@@ -34,14 +35,18 @@ class TracedEnv:
                     frameskip=self.frameskip,
                     repeat_action_probability=self.repeat_action_probability)
         self.obs, _ = self.env.reset()
-        self.current_lives = self.env._env.unwrapped.ale.lives()
+        self.lives = self.env._env.unwrapped.ale.lives()
+    
+    def render(self):
+        """Render the environment by delegating to the underlying environment."""
+        return self.env.render()
 
     def close(self):
         if self.env is not None:
             self.env.close()
             self.env = None
             self.obs = None
-            self.current_lives = None
+            self.lives = 0
     
     def __del__(self):
         self.close()
@@ -87,13 +92,18 @@ class TracedEnv:
 
 
     @bundle()
-    def reset(self):
+    def reset(self, seed=None, options=None):
         """
         Reset the environment and return the initial observation and info.
         """
-        _, _ = self.env.reset()
-        obs, _, terminated, truncated, info = self.env.step(1)
-        self.current_lives = info.get('lives')
+        if self.was_real_done:
+            obs, info = self.env.reset(seed=seed, options=options)
+        else:
+            obs, _, terminated, truncated, info = self.env.step(1) # auto-fire
+            if terminated or truncated:
+                obs, info = self.env.reset(seed=seed, options=options)
+        self.lives = self.env._env.unwrapped.ale.lives()
+
         self.obs = self.extract_game_state(self.env.objects, obs, info)
         self.obs['reward'] = np.nan
 
@@ -104,10 +114,14 @@ class TracedEnv:
         try:
             control = action.data if isinstance(action, trace.Node) else action
             next_obs, reward, termination, truncation, info = self.env.step(control)
+            # Check for life loss to implement episodic life
+            self.was_real_done = termination or truncation
             lives = info.get('lives')
-            if self.current_lives and lives < self.current_lives:
-                next_obs, reward, termination, truncation, info = self.env.step(1)
-            self.current_lives = lives
+            
+            if lives < self.lives and lives > 0:
+                # Life was lost, terminate the episode
+                termination = True
+            self.lives = lives
 
             self.obs = self.extract_game_state(self.env.objects, next_obs, info)
             self.obs['reward'] = reward

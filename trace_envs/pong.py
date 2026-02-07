@@ -9,7 +9,7 @@ from ocatari.core import OCAtari
 class PongOCAtariTracedEnv:
     def __init__(self, 
                  env_name="PongNoFrameskip-v4",
-                 render_mode="human",
+                 render_mode="rgb_array",
                  obs_mode="obj",
                  hud=False,
                  frameskip=4,
