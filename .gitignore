@@ -8,6 +8,9 @@ OAI_CONFIG.json
 OAI_CONFIG_LIST.json
 OAI_CONFIG_LIST
 
+# logging files
+logs/
+
 # C extensions
 *.so
 
