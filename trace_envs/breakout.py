@@ -28,14 +28,15 @@ class TracedEnv:
     def init(self):
         if self.env is not None:
             self.close()
-        self.env = OCAtari(self.env_name, 
-                    render_mode=self.render_mode, 
-                    obs_mode=self.obs_mode, 
+        self.env = OCAtari(self.env_name,
+                    render_mode=self.render_mode,
+                    obs_mode=self.obs_mode,
                     hud=self.hud,
                     frameskip=self.frameskip,
                     repeat_action_probability=self.repeat_action_probability)
         self.obs, _ = self.env.reset()
         self.lives = self.env._env.unwrapped.ale.lives()
+        self.was_real_done = True
     
     def render(self):
         """Render the environment by delegating to the underlying environment."""
@@ -95,13 +96,26 @@ class TracedEnv:
     def reset(self, seed=None, options=None):
         """
         Reset the environment and return the initial observation and info.
+
+        Combines EpisodicLifeEnv + FireResetEnv logic (see openai/baselines):
+          Phase 1 (EpisodicLifeEnv): On true game-over, do a real env.reset().
+                  On life loss, just NOOP to advance past the death frame.
+          Phase 2 (FireResetEnv):    FIRE to launch the ball, every time.
         """
+        # Phase 1 – EpisodicLifeEnv
         if self.was_real_done:
             obs, info = self.env.reset(seed=seed, options=options)
         else:
-            obs, _, terminated, truncated, info = self.env.step(1) # auto-fire
+            # NOOP to advance past the death frame (standard EpisodicLifeEnv)
+            obs, _, terminated, truncated, info = self.env.step(0)
             if terminated or truncated:
                 obs, info = self.env.reset(seed=seed, options=options)
+        self.lives = self.env._env.unwrapped.ale.lives()
+
+        # Phase 2 – FireResetEnv: launch the ball
+        obs, _, terminated, truncated, info = self.env.step(1)  # FIRE
+        if terminated or truncated:
+            obs, info = self.env.reset(seed=seed, options=options)
         self.lives = self.env._env.unwrapped.ale.lives()
 
         self.obs = self.extract_game_state(self.env.objects, obs, info)

@@ -21,15 +21,11 @@ from opto.trace.bundle import ExceptionNode
 from opto.trace.errors import ExecutionError
 from trace_envs.pong import PongOCAtariTracedEnv
 from logging_util import setup_logger
-from training_utils import rollout, evaluate_policy
+from training_utils import rollout, evaluate_policy, create_experiment_dir
 
 
 gym.register_envs(ale_py)
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-log_dir = Path("logs")
-log_dir.mkdir(exist_ok=True)
-base_trace_ckpt_dir = Path("trace_ckpt")
-base_trace_ckpt_dir.mkdir(exist_ok=True)
 
 @trace.model
 class Policy(Module):
@@ -105,18 +101,22 @@ def optimize_policy(
     frame_skip=4,
     sticky_action_p=0.00,
     logger=None,
+    experiment_dirs=None,
 ):
     if logger is None:
         logger = setup_logger(__name__, env_name)
+
+    if experiment_dirs is None:
+        experiment_dirs = create_experiment_dir("pong", timestamp)
 
     policy = Policy()
     optimizer = OptoPrime(policy.parameters(), memory_size=memory_size)
     env = PongOCAtariTracedEnv(env_name=env_name,
                                frameskip=frame_skip,
                                repeat_action_probability=sticky_action_p)
-    perf_csv_filename = log_dir / f"perf_{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.csv"
-    trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace("/", "_")}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}"
-    trace_ckpt_dir.mkdir(exist_ok=True)
+    perf_csv_filename = experiment_dirs["perf_csv"]
+    trace_ckpt_dir = experiment_dirs["trace_ckpt_dir"]
+    gif_dir = experiment_dirs["gif_dir"]
     try:
         rewards = []
         optimization_data = []
@@ -131,13 +131,15 @@ def optimize_policy(
 
             if error is None:
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
+                gif_path = gif_dir / f"eval_iter_{i}.gif"
                 mean_rewards, std_rewards = evaluate_policy(policy,
                                                         PongOCAtariTracedEnv,
                                                         env_name,
                                                         num_episodes=10,
                                                         frameskip=frame_skip,
                                                         repeat_action_probability=sticky_action_p,
-                                                        logger=logger)
+                                                        logger=logger,
+                                                        gif_path=gif_path)
                 steps_used = traj['steps']
                 if mean_rewards >= 21:
                     logger.info(f"Congratulations! You've achieved a perfect score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
@@ -220,6 +222,9 @@ if __name__ == "__main__":
     n_optimization_steps = 20
     memory_size = 5
 
+    # Create per-experiment directory
+    experiment_dirs = create_experiment_dir("pong", timestamp)
+
     # Set up logging
     logger = setup_logger(
         __name__,
@@ -230,10 +235,10 @@ if __name__ == "__main__":
         horizon=horizon,
         optim_steps=n_optimization_steps,
         memory_size=memory_size,
-        log_dir=log_dir,
+        log_file=experiment_dirs["log_file"],
         prefix="OCAtari"
     )
-    
+
     logger.info("Starting Pong AI training...")
     rewards = optimize_policy(
         env_name=env_name,
@@ -244,6 +249,6 @@ if __name__ == "__main__":
         frame_skip=frame_skip,
         sticky_action_p=sticky_action_p,
         logger=logger,
-
+        experiment_dirs=experiment_dirs,
     )
     logger.info("Training completed.")

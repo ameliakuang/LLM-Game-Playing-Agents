@@ -34,12 +34,16 @@ class PongOCAtariTracedEnv:
                            repeat_action_probability=self.repeat_action_probability)
         self.obs, _ = self.env.reset()
     
+    def render(self):
+        """Render the environment by delegating to the underlying environment."""
+        return self.env.render()
+
     def close(self):
         if self.env is not None:
             self.env.close()
             self.env = None
             self.obs = None
-    
+
     def __del__(self):
         self.close()
 

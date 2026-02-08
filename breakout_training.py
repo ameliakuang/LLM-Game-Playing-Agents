@@ -24,14 +24,10 @@ from opto.optimizers.optoprime import OptoPrime
 # )
 from trace_envs.breakout import TracedEnv
 from logging_util import setup_logger
-from training_utils import rollout, evaluate_policy
+from training_utils import rollout, evaluate_policy, create_experiment_dir
 
 gym.register_envs(ale_py)
 timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-log_dir = Path("logs")
-log_dir.mkdir(exist_ok=True)
-base_trace_ckpt_dir = Path("trace_ckpt")
-base_trace_ckpt_dir.mkdir(exist_ok=True)
 
 @trace.model
 class Policy(Module):
@@ -61,7 +57,7 @@ class Policy(Module):
         - The paddle would deflect the ball at different angles depending on where the ball lands on the paddle
         
         Args:
-            obs (dict): Dictionary containing object states for "Player", "Ball", and blocks "{color}B" (color in [R/O/Y/G/A/B]).
+            obs (dict): Dictionary containing object states for 'Player', 'Ball', and blocks '{color}B' (color in [R/O/Y/G/A/B]).
                        Each object has position (x,y), size (w,h), and velocity (dx,dy).
         Returns:
             float: Predicted x-coordinate where the ball will intersect the player's paddle plane.
@@ -95,7 +91,7 @@ class Policy(Module):
 
         Args:
             pre_ball_x (float): predicted x coordinate of the ball intersecting with the paddle or None
-            obs (dict): Dictionary containing object states for "Player", "Ball", and blocks "{color}B" (color in [R/O/Y/G/A/B]).
+            obs (dict): Dictionary containing object states for 'Player', 'Ball', and blocks '{color}B' (color in [R/O/Y/G/A/B]).
                        Each object has position (x,y), size (w,h), and velocity (dx,dy).
         Returns:
             float: Predicted x-coordinate to move the paddle to. 
@@ -123,7 +119,7 @@ class Policy(Module):
         Args:
             target_paddle_pos (float): predicted x coordinate of the position to best position the paddle to catch the ball,
                 and hit the ball to break brick wall.
-            obs (dict): Dictionary containing object states for "Player", "Ball", and blocks "{color}B" (color in [R/O/Y/G/A/B]).
+            obs (dict): Dictionary containing object states for 'Player', 'Ball', and blocks '{color}B' (color in [R/O/Y/G/A/B]).
                 Each object has position (x,y), size (w,h), and velocity (dx,dy).
         Returns:
             int: 0 for NOOP, 2 for RIGHT, 3 for LEFT
@@ -158,27 +154,25 @@ def optimize_policy(
     sticky_action_p=0.00,
     logger=None,
     policy_ckpt=None,
+    experiment_dirs=None,
 ):
     if logger is None:
         logger = setup_logger(__name__, env_name)
-    
+
+    if experiment_dirs is None:
+        experiment_dirs = create_experiment_dir("breakout", timestamp)
+
     policy = Policy()
     if policy_ckpt:
         logger.info(f"Continuing training from ckpt: {policy_ckpt}")
         policy.load(policy_ckpt)
-    # optimizer = OptoPrimeV3(policy.parameters(), memory_size=memory_size, max_tokens=4096)
     optimizer = OptoPrime(policy.parameters(), memory_size=memory_size, max_tokens=4096)
-    # optimizer = OptoPrimeV3([policy.parameters()], use_json_object_format=True,
-    #                     memory_size=memory_size,
-    #                     ignore_extraction_error=False,
-    #                     include_example=False,
-    #                     optimizer_prompt_symbol_set=OptimizerPromptSymbolSetJSON())
     env = TracedEnv(env_name=env_name,
                     frameskip=frame_skip,
                     repeat_action_probability=sticky_action_p,)
-    perf_csv_filename = log_dir / f"perf_{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}.csv"
-    trace_ckpt_dir = base_trace_ckpt_dir / f"{env_name.replace('/', '_')}_{timestamp}_skip{frame_skip}_sticky{sticky_action_p}_horizon{horizon}_optimSteps{n_optimization_steps}_mem{memory_size}"
-    trace_ckpt_dir.mkdir(exist_ok=True)
+    perf_csv_filename = experiment_dirs["perf_csv"]
+    trace_ckpt_dir = experiment_dirs["trace_ckpt_dir"]
+    gif_dir = experiment_dirs["gif_dir"]
     try:
         rewards = []
         optimization_data = []
@@ -199,6 +193,7 @@ def optimize_policy(
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
                 num_episodes = 1
                 steps_per_episode = 4000
+                gif_path = gif_dir / f"eval_iter_{i}.gif"
                 mean_rewards, std_rewards = evaluate_policy(policy,
                                                         TracedEnv,
                                                         env_name,
@@ -206,7 +201,8 @@ def optimize_policy(
                                                         steps_per_episode=steps_per_episode,
                                                         frameskip=frame_skip,
                                                         repeat_action_probability=sticky_action_p,
-                                                        logger=logger) # run the policy on games of length 4000 steps each
+                                                        logger=logger,
+                                                        gif_path=gif_path)
                 steps_used = traj['steps']  
                 
                 recent_mean_rewards.append(mean_rewards)
@@ -283,16 +279,6 @@ def optimize_policy(
                     logger.info(f"LLM response:\n {llm_output}")
             
             logger.info(f"Iteration: {i}, Feedback: {feedback}")
-            optimization_data.append({
-                    "Optimization Step": i,
-                    "Mean Reward": mean_rewards,
-                    "Std Dev Reward": std_rewards,
-                    "Wall Clock Time (s)": time.time() - step_start_time,
-                    "Training Steps": steps_used,
-                    "Max Training Steps": horizon,
-                })
-            df = pd.DataFrame(optimization_data)
-            df.to_csv(perf_csv_filename, index=False)
 
             if error:
                 # Load the latest policy checkpoint from the trace_ckpt_dir
@@ -305,6 +291,17 @@ def optimize_policy(
             if best_iter and i > best_iter + 5 and recent_mean_rewards[-1] < 0.8 * best_mean_reward:
                 logger.info("Performance has dropped significantly in the recent 5 iterations. Loading the best checkpoint so far.")
                 policy.load(best_ckpt)
+            
+            optimization_data.append({
+                    "Optimization Step": i,
+                    "Mean Reward": mean_rewards,
+                    "Std Dev Reward": std_rewards,
+                    "Wall Clock Time (s)": time.time() - step_start_time,
+                    "Training Steps": steps_used,
+                    "Max Training Steps": horizon,
+                })
+            df = pd.DataFrame(optimization_data)
+            df.to_csv(perf_csv_filename, index=False)
     finally:
         if env is not None:
             env.close()
@@ -321,6 +318,9 @@ if __name__ == "__main__":
     memory_size = 5
     policy_ckpt = None
 
+    # Create per-experiment directory
+    experiment_dirs = create_experiment_dir("breakout", timestamp)
+
     # Set up logging
     logger = setup_logger(
         __name__,
@@ -331,10 +331,10 @@ if __name__ == "__main__":
         horizon=horizon,
         optim_steps=n_optimization_steps,
         memory_size=memory_size,
-        log_dir=log_dir,
+        log_file=experiment_dirs["log_file"],
         prefix="OCAtari"
     )
-    
+
     logger.info("Starting Breakout AI training...")
     rewards = optimize_policy(
         env_name=env_name,
@@ -346,6 +346,6 @@ if __name__ == "__main__":
         sticky_action_p=sticky_action_p,
         logger=logger,
         policy_ckpt=policy_ckpt,
-
+        experiment_dirs=experiment_dirs,
     )
     logger.info("Training completed.")
