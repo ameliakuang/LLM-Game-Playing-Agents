@@ -215,12 +215,22 @@ def optimize_policy(
     return rewards
 
 if __name__ == "__main__":
-    frame_skip = 4
-    sticky_action_p = 0.0
-    env_name = "PongNoFrameskip-v4"
-    horizon = 400
-    n_optimization_steps = 20
-    memory_size = 5
+    import argparse
+    parser = argparse.ArgumentParser(description="Pong AI training")
+    parser.add_argument("--env-name", type=str, default="PongNoFrameskip-v4")
+    parser.add_argument("--horizon", type=int, default=400)
+    parser.add_argument("--n-optimization-steps", type=int, default=20)
+    parser.add_argument("--memory-size", type=int, default=5)
+    parser.add_argument("--frame-skip", type=int, default=4)
+    parser.add_argument("--sticky-action-p", type=float, default=0.0)
+    args = parser.parse_args()
+
+    frame_skip = args.frame_skip
+    sticky_action_p = args.sticky_action_p
+    env_name = args.env_name
+    horizon = args.horizon
+    n_optimization_steps = args.n_optimization_steps
+    memory_size = args.memory_size
 
     # Create per-experiment directory
     experiment_dirs = create_experiment_dir("pong", timestamp)

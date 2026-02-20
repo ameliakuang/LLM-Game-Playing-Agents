@@ -17,7 +17,7 @@ load_dotenv(override=True)
 import opto.trace as trace
 from opto.trace import bundle, Module
 from opto.optimizers.optoprime import OptoPrime
-from trace_envs.freeway import TracedEnv
+from trace_envs.asterix import TracedEnv
 from logging_util import setup_logger
 from training_utils import rollout, evaluate_policy, create_experiment_dir
 
@@ -30,82 +30,117 @@ class Policy(Module):
         pass
 
     def __call__(self, obs):
-        traffic_analysis = self.analyze_traffic(obs)
-        action = self.select_action(traffic_analysis, obs)
+        situation = self.analyze_situation(obs)
+        action = self.select_action(situation, obs)
         return action
 
     @bundle(trainable=True)
-    def analyze_traffic(self, obs):
+    def analyze_situation(self, obs):
         """
-        Analyze car positions and velocities to determine which lanes are safe
-        to cross right now, based on the chicken's current y-position.
+        Analyze the game state to find the best item to collect and detect
+        nearby dangers.
 
-        Game setup:
-        - The chicken starts at the bottom (y~187) and must reach the top (y~0).
-        - Moving UP decreases y; moving DOWN increases y.
-        - There are 10 lanes of traffic at fixed y-positions (top to bottom):
-            Lane 1: y=27,  Lane 2: y=43,  Lane 3: y=59,  Lane 4: y=75,  Lane 5: y=91,
-            Lane 6: y=107, Lane 7: y=123, Lane 8: y=139, Lane 9: y=155, Lane 10: y=171
-        - Top lanes (1-5) have cars moving right-to-left (negative dx).
-        - Bottom lanes (6-10) have cars moving left-to-right (positive dx).
-        - Each car has width w=8. The chicken has width w=6.
-        - Screen x range: roughly 0 to 160.
+        Game layout:
+        - 8 horizontal lanes at y-positions 26, 42, 58, 74, 90, 106, 122, 138
+          (16px apart).
+        - Objects move horizontally across lanes. Each lane has at most one object.
+        - Player can move in 8 directions + NOOP. Screen x range: 0-152.
 
-        Strategy:
-        - Identify which lane the chicken is about to enter (the next lane above).
-        - Check if there is a car in that lane whose x position would collide with
-          the chicken (x~44) within the next few frames.
-        - A lane is "safe" if the car's x is far enough from the chicken's x that
-          the chicken can pass through before the car arrives.
+        Scoring:
+        - Collecting a Consumable gives 50+ points; Reward gives bonus points.
+        - Touching an Enemy (lyre) costs a life. Losing all lives ends the game.
+        - An enemy in the same lane is only dangerous if the player is near its
+          x-position — being in the same lane but far away horizontally is safe.
+
+        Observation fields:
+        - "Player": {x, y} — player position.
+        - "Enemies": list of {x, y, type}, sorted by distance. May be absent.
+        - "Consumables": list of {x, y, type}, sorted by distance. May be absent.
+        - "Rewards": list of {x, y, type}, sorted by distance. May be absent.
+        - "lives": int, remaining lives.
+        - "reward": float, reward from the previous step.
+
+        Strategy hints:
+        - Use proximity-based danger detection: an enemy is dangerous only if
+          it's within ~30px horizontally. Track which lane y-positions are
+          dangerous and which enemies are approaching (<20px).
+        - When selecting which item to pursue, factor in: Manhattan distance,
+          item type (Rewards are worth more), whether the item's lane is
+          dangerous, and whether the item is in the player's current lane
+          (cheaper to reach).
 
         Args:
-            obs (dict): Dictionary with "Chicken" state {x, y, w, h, dx, dy}
-                       and "Cars" list of car states [{x, y, w, h, dx, dy}, ...].
+            obs (dict): The observation dictionary.
         Returns:
-            dict: Analysis with keys:
-                - "safe": bool, whether it is safe to move up right now
-                - "next_lane_car": dict or None, the car in the next lane above
-                - "chicken_y": int, current chicken y position
+            dict with keys:
+                - "nearest_item": dict {x, y, type} of item to pursue, or None
+                - "player_x": int
+                - "player_y": int
+                - "dangerous_lanes": list of y-positions with nearby enemies
+                - "approaching_enemies": list of very close enemies, or None
         """
-        if 'Chicken' not in obs:
-            return {"safe": True, "next_lane_car": None, "chicken_y": 187}
+        if 'Player' not in obs:
+            return {"nearest_item": None, "player_x": 76, "player_y": 74,
+                    "dangerous_lanes": [], "approaching_enemies": None}
 
-        chicken_y = obs['Chicken']['y']
-        return {"safe": True, "next_lane_car": None, "chicken_y": chicken_y}
+        player = obs['Player']
+        items = obs.get('Consumables', []) + obs.get('Rewards', [])
+        nearest_item = items[0] if items else None
+
+        return {
+            "nearest_item": nearest_item,
+            "player_x": player['x'],
+            "player_y": player['y'],
+            "dangerous_lanes": [],
+            "approaching_enemies": None,
+        }
 
     @bundle(trainable=True)
-    def select_action(self, traffic_analysis, obs):
+    def select_action(self, situation, obs):
         """
-        Select the action to take based on the traffic analysis.
+        Select an action to move the player toward the nearest item while
+        avoiding enemies.
 
-        Movement Logic:
-        - If the next lane is safe: Move UP (action 1) to make progress
-        - If the next lane is NOT safe: NOOP (action 0) to wait for a gap
-        - Only use DOWN (action 2) as a last resort to dodge an imminent collision
+        Available actions (action index -> effect):
+        - 0: NOOP      — stay in place
+        - 1: UP         — move toward smaller y
+        - 2: RIGHT      — move toward larger x
+        - 3: LEFT       — move toward smaller x
+        - 4: DOWN       — move toward larger y
+        - 5: UPRIGHT    — move up and right simultaneously
+        - 6: UPLEFT     — move up and left simultaneously
+        - 7: DOWNRIGHT  — move down and right simultaneously
+        - 8: DOWNLEFT   — move down and left simultaneously
 
-        The goal is to maximize the number of complete crossings within the time limit.
-        Prioritize forward progress: move UP whenever there is a safe gap.
+        Lane y-positions: 26, 42, 58, 74, 90, 106, 122, 138 (16px apart).
+        Diagonal actions (5-8) move in two directions at once and are more
+        efficient when the target is in a different lane.
+
+        Strategy hints:
+        - If an enemy is approaching in the player's lane, evade to an
+          adjacent safe lane (use diagonals to also move toward the target).
+        - When in the same lane as the target, move horizontally toward it.
+        - When in a different lane, prefer diagonal movement to close both
+          the x and y gap simultaneously.
+        - Be willing to enter a slightly dangerous lane if a high-value
+          Reward is very close.
 
         Args:
-            traffic_analysis (dict): Analysis from analyze_traffic with keys:
-                - "safe": bool, whether it is safe to move up
-                - "next_lane_car": dict or None, the car in the next lane
-                - "chicken_y": int, current chicken y position
+            situation (dict): Analysis from analyze_situation with keys
+                nearest_item, player_x, player_y, dangerous_lanes,
+                approaching_enemies.
             obs (dict): Full observation dictionary.
         Returns:
-            int: 0 for NOOP, 1 for UP, 2 for DOWN
+            int: Action index 0-8.
         """
-        if traffic_analysis is None:
-            return 1  # Default: move up
+        if situation is None or situation.get('nearest_item') is None:
+            return 0
 
-        if traffic_analysis.get("safe", True):
-            return 1  # UP - safe to advance
-        else:
-            return 0  # NOOP - wait for gap
+        return random.choice([1, 2, 3, 4, 5, 6, 7, 8])
 
 
 def optimize_policy(
-    env_name="FreewayNoFrameskip-v4",
+    env_name="AsterixNoFrameskip-v4",
     horizon=2000,
     memory_size=5,
     n_optimization_steps=10,
@@ -120,7 +155,7 @@ def optimize_policy(
         logger = setup_logger(__name__, env_name)
 
     if experiment_dirs is None:
-        experiment_dirs = create_experiment_dir("freeway", timestamp)
+        experiment_dirs = create_experiment_dir("asterix", timestamp)
 
     policy = Policy()
     if policy_ckpt:
@@ -152,7 +187,7 @@ def optimize_policy(
             if error is None:
                 feedback = f"Episode ends after {traj['steps']} steps with total score: {sum(traj['rewards']):.1f}"
                 num_episodes = 3
-                steps_per_episode = 2500
+                steps_per_episode = 20000
                 gif_path = gif_dir / f"eval_iter_{i}.gif"
                 mean_rewards, std_rewards = evaluate_policy(policy,
                                                         TracedEnv,
@@ -168,7 +203,7 @@ def optimize_policy(
                 recent_mean_rewards.append(mean_rewards)
                 if len(recent_mean_rewards) > 5:
                     recent_mean_rewards.pop(0)
-                if mean_rewards >= 50:
+                if mean_rewards >= 5000:
                     logger.info(f"Congratulations! You've achieved a score of {mean_rewards} with std dev {std_rewards}. Ending optimization early.")
                     rewards.append(sum(traj['rewards']))
                     optimization_data.append({
@@ -183,17 +218,17 @@ def optimize_policy(
                     df.to_csv(perf_csv_filename, index=False)
                     policy.save(os.path.join(trace_ckpt_dir, f"{i}.pkl"))
                     break
-                if mean_rewards >= 25:
-                    feedback += (f"\nGreat progress! You're scoring {mean_rewards} crossings on average of {num_episodes} games with std dev {std_rewards}. "
-                                 f"Keep optimizing gap detection to push higher.")
+                if mean_rewards >= 2000:
+                    feedback += (f"\nGood: scoring {mean_rewards:.0f} pts avg over {num_episodes} episodes (std={std_rewards:.0f}). "
+                                 f"Consider whether you can collect items more efficiently or take advantage of lanes you might be avoiding unnecessarily.")
                 elif mean_rewards > 0:
-                    feedback += (f"\nYou're scoring {mean_rewards} crossings on average of {num_episodes} games with std dev {std_rewards}. "
-                                 f"Try to improve gap detection and timing to cross more lanes safely. "
-                                 f"Remember: always be moving UP unless a car is directly in the way.")
+                    feedback += (f"\nScoring {mean_rewards:.0f} pts avg over {num_episodes} episodes (std={std_rewards:.0f}). "
+                                 f"Points come from collecting Consumables and Rewards. Touching an Enemy costs a life. "
+                                 f"Items in the observation lists are sorted by distance (nearest first).")
                 elif mean_rewards <= 0:
-                    feedback += (f"\nYour score is {mean_rewards} crossings on average of {num_episodes} games with std dev {std_rewards}. "
-                                 f"The chicken needs to move UP (action 1) to cross lanes. "
-                                 f"Wait with NOOP (action 0) only when a car is about to hit you, otherwise keep moving UP.")
+                    feedback += (f"\nScoring {mean_rewards:.0f} pts avg over {num_episodes} episodes (std={std_rewards:.0f}). "
+                                 f"Points are only earned by collecting Consumable and Reward items. "
+                                 f"Move toward items to collect them — compare player x/y with item x/y to pick the right direction.")
                 target = traj['observations'][-1]
 
                 rewards.append(sum(traj['rewards']))
@@ -213,16 +248,15 @@ def optimize_policy(
 
             logger.info(f"Iteration: {i}, Feedback: {feedback}, target: {target}")
 
-            instruction = "In Freeway, you guide a chicken from the bottom of the screen (y~187) to the top (y~0), crossing 10 lanes of traffic. "
-            instruction += "You score 1 point each time the chicken reaches the top and it resets to the bottom to cross again. "
-            instruction += "Actions: 0=NOOP (wait), 1=UP (move toward goal), 2=DOWN (move away from goal). "
-            instruction += "There are 10 lanes of cars at fixed y-positions (top to bottom): y=27, 43, 59, 75, 91, 107, 123, 139, 155, 171. "
-            instruction += "Top lanes (y=27-91) have cars moving right-to-left (negative dx). Bottom lanes (y=107-171) have cars moving left-to-right (positive dx). "
-            instruction += "The chicken is at x~44. Cars have width 8, the chicken has width 6. "
-            instruction += "If hit by a car, the chicken is pushed back one lane (novice difficulty). "
-            instruction += "The game runs on a ~2 minute timer. Maximize the number of crossings within the time limit. "
-            instruction += "Key strategy: always be moving UP unless a car is about to collide. Waiting too long wastes time. "
-            instruction += "Analyze the trace to figure out when the chicken gets hit and optimize gap detection to avoid cars while maintaining forward progress."
+            instruction = "In Asterix, you control a player across 8 horizontal lanes (lane 0-7) to collect items and avoid enemies. "
+            instruction += "Actions: 0=NOOP, 1=UP, 2=RIGHT, 3=LEFT, 4=DOWN, 5=UPRIGHT, 6=UPLEFT, 7=DOWNRIGHT, 8=DOWNLEFT. "
+            instruction += "Lane y-positions (top to bottom): 26, 42, 58, 74, 90, 106, 122, 138 (16px apart). Screen x: 0-152. "
+            instruction += "Each lane has at most one object: Consumable (collect for 50-500pts), Reward (collect for bonus pts), or Enemy/lyre (touching costs a life). "
+            instruction += "The observation provides 'lane' (0-7) and 'dist' (Manhattan distance) for each object, "
+            instruction += "'safe_collectible_lanes' (lanes with items but no enemy), and 'enemy_lanes'. "
+            instruction += "Object lists are sorted by distance (nearest first). "
+            instruction += "Score by collecting items. Enemies only matter if you're close to their x-position in the same lane. "
+            instruction += "Diagonal actions (5-8) move in two directions at once."
             optimizer.objective = optimizer.default_objective + instruction
 
             optimizer.zero_feedback()
@@ -237,6 +271,16 @@ def optimize_policy(
                     logger.info(f"LLM response:\n {llm_output}")
 
             logger.info(f"Iteration: {i}, Feedback: {feedback}")
+            optimization_data.append({
+                    "Optimization Step": i,
+                    "Mean Reward": mean_rewards,
+                    "Std Dev Reward": std_rewards,
+                    "Wall Clock Time (s)": time.time() - step_start_time,
+                    "Training Steps": steps_used,
+                    "Max Training Steps": horizon,
+                })
+            df = pd.DataFrame(optimization_data)
+            df.to_csv(perf_csv_filename, index=False)
 
             if error:
                 # Load the latest policy checkpoint from the trace_ckpt_dir
@@ -249,27 +293,17 @@ def optimize_policy(
             if best_iter and i > best_iter + 5 and recent_mean_rewards[-1] < 0.8 * best_mean_reward:
                 logger.info("Performance has dropped significantly in the recent 5 iterations. Loading the best checkpoint so far.")
                 policy.load(best_ckpt)
-            optimization_data.append({
-                    "Optimization Step": i,
-                    "Mean Reward": mean_rewards,
-                    "Std Dev Reward": std_rewards,
-                    "Wall Clock Time (s)": time.time() - step_start_time,
-                    "Training Steps": steps_used,
-                    "Max Training Steps": horizon,
-                })
-            df = pd.DataFrame(optimization_data)
-            df.to_csv(perf_csv_filename, index=False)
     finally:
         if env is not None:
             env.close()
 
-    logger.info(f"Final Average Reward during Training (Not evaluation so reference only): {sum(rewards) / len(rewards)}")
+    logger.info(f"Final Average Reward: {sum(rewards) / len(rewards)}")
     return rewards
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser(description="Freeway AI training")
-    parser.add_argument("--env-name", type=str, default="FreewayNoFrameskip-v4")
+    parser = argparse.ArgumentParser(description="Asterix AI training")
+    parser.add_argument("--env-name", type=str, default="AsterixNoFrameskip-v4")
     parser.add_argument("--horizon", type=int, default=100)
     parser.add_argument("--n-optimization-steps", type=int, default=30)
     parser.add_argument("--memory-size", type=int, default=5)
@@ -287,7 +321,7 @@ if __name__ == "__main__":
     policy_ckpt = args.policy_ckpt
 
     # Create per-experiment directory
-    experiment_dirs = create_experiment_dir(f"freeway_horizon{horizon}", timestamp)
+    experiment_dirs = create_experiment_dir(f"asterix_horizon{horizon}", timestamp)
 
     # Set up logging
     logger = setup_logger(
@@ -303,7 +337,7 @@ if __name__ == "__main__":
         prefix="OCAtari"
     )
 
-    logger.info("Starting Freeway AI training...")
+    logger.info("Starting Asterix AI training...")
     rewards = optimize_policy(
         env_name=env_name,
         horizon=horizon,

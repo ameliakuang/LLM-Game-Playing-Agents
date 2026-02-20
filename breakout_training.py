@@ -310,13 +310,24 @@ def optimize_policy(
     return rewards
 
 if __name__ == "__main__":
-    frame_skip = 4
-    sticky_action_p = 0.0
-    env_name = "BreakoutNoFrameskip-v4"
-    horizon = 300
-    n_optimization_steps = 30
-    memory_size = 5
-    policy_ckpt = None
+    import argparse
+    parser = argparse.ArgumentParser(description="Breakout AI training")
+    parser.add_argument("--env-name", type=str, default="BreakoutNoFrameskip-v4")
+    parser.add_argument("--horizon", type=int, default=300)
+    parser.add_argument("--n-optimization-steps", type=int, default=30)
+    parser.add_argument("--memory-size", type=int, default=5)
+    parser.add_argument("--frame-skip", type=int, default=4)
+    parser.add_argument("--sticky-action-p", type=float, default=0.0)
+    parser.add_argument("--policy-ckpt", type=str, default=None, help="Path to policy checkpoint to resume from")
+    args = parser.parse_args()
+
+    frame_skip = args.frame_skip
+    sticky_action_p = args.sticky_action_p
+    env_name = args.env_name
+    horizon = args.horizon
+    n_optimization_steps = args.n_optimization_steps
+    memory_size = args.memory_size
+    policy_ckpt = args.policy_ckpt
 
     # Create per-experiment directory
     experiment_dirs = create_experiment_dir("breakout", timestamp)
