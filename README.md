@@ -1,22 +1,57 @@
 # Learning Game-Playing Agents with Generative Code Optimization
 
-This repository contains code for *Learning Game-Playing Agents with Generative Code Optimization* (ICML 2025 PRAL Workshop). We use Trace LLM optimizers (OptoPrime) to optimize python policies to play Atari games. Paper link: https://openreview.net/forum?id=ZM65X3NoTd
+Code for *Learning Game-Playing Agents with Generative Code Optimization* (ICML 2025 PRAL Workshop). We use Trace LLM optimizers (OptoPrime) to optimize Python policies to play Atari games via object-centric representations (OC_Atari).
+
+Paper: https://openreview.net/forum?id=ZM65X3NoTd
+
+## Supported Games
+
+Asterix, Breakout, Enduro, Freeway, Pong, Q*bert, Seaquest, Space Invaders
 
 ## Setup
 
-Create a `.env` file in the root directory of the repository with the following environment variables set:
-```
-TRACE_CUSTOMLLM_MODEL=xxxxx
-TRACE_CUSTOMLLM_URL=xxxxx
-TRACE_CUSTOMLLM_API_KEY=xxxxx
-TRACE_DEFAULT_LLM_BACKEND=xxxxx
+### 1. Install dependencies
+
+```bash
+bash install.sh
 ```
 
-## Pong AI
+This will:
+- Install [uv](https://github.com/astral-sh/uv) if not already present
+- Clone the [OC_Atari](https://github.com/ameliakuang/OC_Atari) library into `external/OC_Atari/`
+- Install all Python dependencies via `uv sync`
 
-* `pong_ocatari_LLM_agent.py`: Primary script for training and evaluating the Pong AI with OCAtari API for environment interaction and Trace LLM optimizers for optimizing the policy.
-* `evaluate_Pong_policy.py`: This script is used to load checkpoints and evaluate the performance of the trained Pong AI policy.
+### 2. Configure environment variables
 
-**Additional Scripts**
-* `pong_LLM_agent.py`: Initial script for training and evaluating the Pong AI using the Gymnasium API alongside Trace LLM optimizers.
-* `simple_pong_ai.py`: Implements a basic rule-based Pong AI agent as a simple baseline.
+Follow the [LLM API Setup of Trace](https://github.com/microsoft/Trace?tab=readme-ov-file#llm-api-setup) to use OptoPrime as the supported optimizer.
+
+## Running Training
+
+Each game has a corresponding training script. Run with:
+
+```bash
+uv run python <game>_training.py
+```
+
+For example:
+
+```bash
+uv run python asterix_training.py
+uv run python breakout_training.py
+uv run python pong_training.py
+```
+
+## Project Structure
+
+```
+├── *_training.py          # Training scripts (one per game)
+├── trace_envs/            # Traced environment wrappers (one per game)
+├── training_utils.py      # Shared training utilities
+├── logging_util.py        # Logging configuration
+├── plotting_game_perf.py  # Performance visualization
+├── install.sh             # Setup script
+├── pyproject.toml         # Dependencies (managed by uv)
+├── external/OC_Atari/     # Object-centric Atari library
+├── logs/                  # Training logs
+└── trace_ckpt/            # Optimizer checkpoints
+```
