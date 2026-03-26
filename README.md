@@ -8,6 +8,9 @@ Paper that includes 8 games: http://arxiv.org/abs/2603.23994
 
 <img width="2410" height="1516" alt="image" src="https://github.com/user-attachments/assets/deb16cf8-cfb5-4553-a2cf-6cc09a9efe9f" />
 
+## Supported Games
+
+Asterix, Breakout, Enduro, Freeway, Pong, Q*bert, Seaquest, Space Invaders
 
 ## Deep RL Baselines
 
@@ -17,9 +20,10 @@ We compare LLM-optimized policies against deep RL baselines that also use object
 - [DQN baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_dqn_atari.py)
 - [SAC baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/sac_obj_atari.py) 
 
-## Supported Games
-
-Asterix, Breakout, Enduro, Freeway, Pong, Q*bert, Seaquest, Space Invaders
+We share the training logs on Wandb:
+- [DQN training log](https://wandb.ai/kuangzy-amelia-stanford-university/obj-dqn-5trials-new)
+- [PPO training log](https://wandb.ai/kuangzy-amelia-stanford-university/obj-ppo-5trials-flatten)
+- [SAC training log](https://wandb.ai/kuangzy-amelia-stanford-university/obj-sac-5trials)
 
 ## Setup
 
