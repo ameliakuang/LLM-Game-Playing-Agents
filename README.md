@@ -2,9 +2,17 @@
 
 Code for *Learning Game-Playing Agents with Generative Code Optimization* (ICML 2025 PRAL Workshop). We use Trace LLM optimizers (OptoPrime) to optimize Python policies to play Atari games via object-centric representations (OC_Atari).
 
-Paper that includes 3 initial games: https://openreview.net/forum?id=ZM65X3NoTd
+Paper that includes 3 initial games (Pong, Breakout, Space Invaders): https://openreview.net/forum?id=ZM65X3NoTd
 
 Paper that includes 8 games: http://arxiv.org/abs/2603.23994
+
+## Deep RL Baselines
+
+We compare LLM-optimized policies against deep RL baselines that also use object-centric representations. Our [CleanRL fork](https://github.com/ameliakuang/cleanrl_obj_centric) includes:
+- [Object-centric Atari environment](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_atari_env.py)
+- [PPO baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_ppo_cleanrl.py)
+- [DQN baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_dqn_cleanrl.py)
+- [SAC baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/sac_obj_atari.py) 
 
 ## Supported Games
 
