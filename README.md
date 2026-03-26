@@ -11,7 +11,7 @@ Paper that includes 8 games: http://arxiv.org/abs/2603.23994
 We compare LLM-optimized policies against deep RL baselines that also use object-centric representations. Our [CleanRL fork](https://github.com/ameliakuang/cleanrl_obj_centric) includes:
 - [Object-centric Atari environment](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_atari_env.py)
 - [PPO baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_ppo_cleanrl.py)
-- [DQN baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_dqn_cleanrl.py)
+- [DQN baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/obj_dqn_atari.py)
 - [SAC baseline](https://github.com/ameliakuang/cleanrl_obj_centric/blob/master/cleanrl/sac_obj_atari.py) 
 
 ## Supported Games
