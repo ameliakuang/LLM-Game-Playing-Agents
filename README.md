@@ -1,10 +1,12 @@
 # Learning Game-Playing Agents with Generative Code Optimization
 
-Code for *Learning Game-Playing Agents with Generative Code Optimization* (ICML 2025 PRAL Workshop). We use Trace LLM optimizers (OptoPrime) to optimize Python policies to play Atari games via object-centric representations (OC_Atari).
+Code for *Learning Game-Playing Agents with Generative Code Optimization* (ICML 2025 PRAL Workshop). We use Trace LLM optimizers (OptoPrime) to optimize Python policies to play Atari games via object-centric representations (OC_Atari). This repo provides the framework where you can let LLM play with Atari games via annotated text interfaces (no image/video required). 
 
 Paper that includes 3 initial games (Pong, Breakout, Space Invaders): https://openreview.net/forum?id=ZM65X3NoTd
 
 Paper that includes 8 games: http://arxiv.org/abs/2603.23994
+
+<img width="2410" height="1516" alt="image" src="https://github.com/user-attachments/assets/deb16cf8-cfb5-4553-a2cf-6cc09a9efe9f" />
 
 ## Supported Games
 
